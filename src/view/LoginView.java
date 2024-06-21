@@ -3,6 +3,7 @@ package view;
 import business.UserManager;
 import core.Helper;
 import entity.User;
+import view.EmployeeView.EmployeeView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +39,12 @@ public class LoginView extends Layout {
                 if (loginUser==null){
                     Helper.showMsg("notFound");
                 }else {
-                    AdminView adminView = new AdminView(loginUser);
+                    if (loginUser.getRole() == User.Role.ADMİN){
+                        AdminView adminView = new AdminView(loginUser);
+                    } else if (loginUser.getRole() == User.Role.EMPLOYEE) {
+                        EmployeeView employeeView = new EmployeeView(loginUser);
+                    }
+                    dispose();
                 }
             }
 

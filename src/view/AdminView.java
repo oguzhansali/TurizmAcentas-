@@ -17,9 +17,13 @@ public class AdminView extends Layout{
     private JPanel pnl_top;
     private JLabel lbl_welcome;
     private JTabbedPane tab_menu;
-    private JPanel pnl_user;
+    private JPanel pnl_hotel;
+    private JTable tbl_hotel;
+    private JScrollPane scrl_hotel;
+    private JPanel pnl_facility_feature;
+    private JTable tbl_facility_feature;
+    private JScrollPane scrl_facility_feature;
     private JTable tbl_user;
-    private JScrollPane scrl_user;
     private JComboBox<User.Role> cmb_user;
     private JButton btn_search;
     private  User user;
@@ -40,6 +44,7 @@ public class AdminView extends Layout{
 
         loadUserTable();
         loadUserComponent();
+        loadUserFilter();
 
 
         //Sağ tıklama sorununu bu şekilde çözdüm!!!
@@ -78,24 +83,29 @@ public class AdminView extends Layout{
         this.user_menu= new JPopupMenu();
 
         this.user_menu.add("Yeni").addActionListener(e -> {
-            AdminView adminView = new AdminView(null);
-            adminView.addWindowListener(new WindowAdapter() {
+            AddAdminView addAdminView = new AddAdminView(null);
+            addAdminView.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     loadUserTable();
                 }
             });
+            addAdminView.setVisible(true);
         });
+
         this.user_menu.add("Güncelle").addActionListener(e -> {
             int selectUserId = this.getTableSelectedRow(tbl_user,0);
-            AdminView adminView = new AdminView(this.userManager.getById(selectUserId));
-            adminView.addWindowListener(new WindowAdapter() {
+            User selectedUser =this.userManager.getById(selectUserId);
+            AddAdminView addAdminView = new AddAdminView(selectedUser);
+            addAdminView.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     loadUserTable();
                 }
             });
+            addAdminView.setVisible(true);
         });
+
         this.user_menu.add("Sil").addActionListener(e -> {
             if (Helper.confirm("sure")){
                 int selectedUserId = this.getTableSelectedRow(tbl_user,0);
@@ -114,10 +124,12 @@ public class AdminView extends Layout{
         this.cmb_user.setSelectedItem(null);
 
         //Filtreleme işlemi için ActionListener
-        this.cmb_user.addActionListener(e -> {
+        this.btn_search.addActionListener(e -> {
             User.Role selectedRole = (User.Role) cmb_user.getSelectedItem();
             if (selectedRole!=null){
-                //ArrayList<Object[]> filteredUserList = this.userManager.getForTable(col_user.length,selectedRole);
+                ArrayList<Object[]> filteredUserList = this.userManager.getForTable(4,selectedRole);
+                Object[] col_user = {"Kullanıcı ID","Kullanıcı Adı","Kullanıcı Şifre","Kullanıcı Pozisyonu"};
+                createTable(tmdl_user,tbl_user,col_user,filteredUserList);
             }else {
                 loadUserTable();//Tüm kullanıcıları yükler.
             }

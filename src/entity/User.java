@@ -3,12 +3,15 @@ package entity;
 public class User {
 
     private Role role;
-    private int id;
+    private Integer id;
     private String username;
     private String password;
 
     public User() {
 
+    }
+
+    public User(String text) {
     }
 
     public enum Role{
@@ -24,7 +27,7 @@ public class User {
         this.role = role;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

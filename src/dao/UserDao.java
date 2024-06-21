@@ -80,24 +80,29 @@ public class UserDao {
     public boolean save (User user){
         String query = "INSERT INTO public.user"+
                 "( "+
-                "user_id,"+
                 "user_name,"+
                 "user_pass,"+
                 "user_role"+
                 ")"+
-                "VALUES (?,?,?,?)";
+                "VALUES (?,?,?)";
         try {
             PreparedStatement pr = con.prepareStatement(query);
-            pr.setInt(1,user.getId());
-            pr.setString(2,user.getUsername());
-            pr.setString(3,user.getPassword());
-            pr.setString(4,user.getRole().toString());
-            return pr.executeUpdate() !=-1;
+            pr.setString(1,user.getUsername());
+            pr.setString(2,user.getPassword());
+            pr.setString(3,user.getRole().toString());
+            int rowCount=  pr.executeUpdate();
+            if (rowCount>0){
+                ResultSet generatedKeys = pr.getGeneratedKeys();
+                if (generatedKeys.next()){
+                    user.setId(generatedKeys.getInt(1));
+                }
+                return true;
+            }
 
         }catch (SQLException throwables){
             throwables.printStackTrace();
         }
-        return true;
+        return false;
     }
 
     public boolean update(User user){
@@ -112,22 +117,22 @@ public class UserDao {
             pr.setString(2, user.getPassword());
             pr.setString(3,user.getRole().toString());
             pr.setInt(4,user.getId());
-            return  pr.executeUpdate() != -1;
+            return  pr.executeUpdate() >0;
         }catch (SQLException throwables){
             throwables.printStackTrace();
         }
-        return  true;
+        return  false;
     }
     public  boolean delete (int user){
         String query = "DELETE FROM public.user WHERE user_id = ?";
         try {
             PreparedStatement pr = con.prepareStatement(query);
             pr.setInt(1, user);
-            return pr.executeUpdate() !=-1;
+            return pr.executeUpdate() > 0;
         }catch (SQLException throwables){
             throwables.printStackTrace();
         }
-        return true;
+        return false;
     }
 
 }

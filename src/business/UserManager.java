@@ -55,7 +55,7 @@ public class UserManager {
     }
 
     public boolean save(User user){
-        if (this.getById(user.getId())!=null){
+        if (user.getId()!=null && this.getById(user.getId())!=null){
             Helper.showMsg("error");
             return false;
         }
@@ -63,7 +63,7 @@ public class UserManager {
     }
     public boolean update(User user){
         if (this.getById(user.getId())==null){
-            Helper.showMsg(user.getId()+" ID kayıtlı user bulunamadı.");
+            Helper.showMsg(user.getId()+ " ID kayıtlı user bulunamadı.");
             return false;
         }
         return this.userDao.update(user);
@@ -74,6 +74,10 @@ public class UserManager {
             return false;
         }
         return this.userDao.delete(id);
+    }
+
+    public boolean add(User user) {
+        return this.save(user);
     }
 
 }
