@@ -10,11 +10,19 @@ public class Hotel {
     private String adress;
     private String mail;
     private String mpno;
-    private String star;
+    private Star star;
     private Date strt_date;
     private Date fnsh_date;
 
-    public Hotel(int id, String name, String adress, String mail, String mpno, String star, Date strt_date, Date fnsh_date) {
+    public enum Star{
+        BİR,
+        İKİ,
+        ÜÇ,
+        DÖRT,
+        BEŞ
+    }
+
+    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, Date strt_date, Date fnsh_date) {
         this.id = id;
         this.name = name;
         this.adress = adress;
@@ -69,12 +77,12 @@ public class Hotel {
         this.mpno = mpno;
     }
 
-    public String getStar() {
+    public Star getStar() {
         return star;
     }
 
     public void setStar(String star) {
-        this.star = star;
+        this.star = Star.valueOf(star);
     }
 
     public java.sql.Date getStrt_date() {

@@ -26,6 +26,8 @@ public class AdminView extends Layout{
     private JTable tbl_user;
     private JComboBox<User.Role> cmb_user;
     private JButton btn_search;
+    private JPanel pnl_user;
+    private JScrollPane scrl_user;
     private  User user;
     private UserManager userManager;
     private DefaultTableModel tmdl_user = new DefaultTableModel();

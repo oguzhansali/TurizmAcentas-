@@ -1,9 +1,11 @@
 package view.EmployeeView;
 
 import business.HotelManager;
+import business.UserManager;
 import core.Helper;
 import entity.Hotel;
 import entity.User;
+import view.HotelView;
 import view.Layout;
 
 import javax.swing.*;
@@ -25,7 +27,7 @@ public class EmployeeView extends Layout {
     private JPanel pnl_facility_feature;
     private JScrollPane scrl_facility_feature;
     private JTable tbl_facility_feature;
-
+    private UserManager userManager;
     private Hotel hotel;
     private HotelManager hotelManager;
     private DefaultTableModel tmdl_hotel = new DefaultTableModel();
@@ -35,20 +37,25 @@ public class EmployeeView extends Layout {
     private User user;
 
     public EmployeeView(User user){
-        this.hotel_menu= new ;
+        this.userManager = new UserManager();
+        this.hotelManager=new HotelManager();
         this.add(container);
         this.guiInitilaze(1000,500);
         this.user=user;
 
-        if (this.hotel==null){
+        if (this.user==null){
             dispose();
         }
         this.lbl_welcome.setText("Hoşgeldiniz : " + this.user.getUsername());
 
+        //Hotel Tab Menu.
+        loadHotelTable();
+        loadHotelComponent();
+
 
 
         //Sağ tıklama sorununu bu şekilde çözdüm!!!
-        this.tbl_hotel.addMouseListener(new MouseAdapter() {
+        this.scrl_hotel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 showPopup(e);
@@ -66,7 +73,7 @@ public class EmployeeView extends Layout {
             }
         });
 
-        this.tbl_hotel.setComponentPopupMenu(hotel_menu);
+        this.scrl_hotel.setComponentPopupMenu(hotel_menu);
 
 
 
@@ -106,27 +113,28 @@ public class EmployeeView extends Layout {
         this.hotel_menu= new JPopupMenu();
         //HotelView OLUŞTURULARAK y9eni otel oluşturlacak.
         this.hotel_menu.add("Yeni").addActionListener(e -> {
-            EmployeeView employeeView = new EmployeeView(null);
-            employeeView.addWindowListener(new WindowAdapter() {
+            HotelView hotelView = new HotelView(null);
+            hotelView.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     loadHotelTable();
                 }
             });
-            employeeView.setVisible(true);
+            hotelView.setVisible(true);
         });
 
         this.hotel_menu.add("Güncelle").addActionListener(e -> {
             int selectHotelId = this.getTableSelectedRow(tbl_hotel,0);
-            Hotel selectedHotel =this.hotelManager.getById(selectHotelId);
-            EmployeeView employeeView = new EmployeeView(selectedHotel);
-            employeeView.addWindowListener(new WindowAdapter() {
+
+            Hotel hotel=this.hotelManager.getById(selectHotelId);
+            HotelView hotelView =new HotelView(hotel);
+            hotelView.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     loadHotelTable();
                 }
             });
-            employeeView.setVisible(true);
+            hotelView.setVisible(true);
         });
 
         this.hotel_menu.add("Sil").addActionListener(e -> {

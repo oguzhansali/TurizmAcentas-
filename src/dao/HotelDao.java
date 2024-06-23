@@ -2,6 +2,7 @@ package dao;
 
 import core.Db;
 import entity.Hotel;
+import entity.HotelFacilityFeature;
 import entity.User;
 
 import java.sql.Connection;
@@ -17,6 +18,8 @@ public class HotelDao {
     public HotelDao(){
         this.con= Db.getInstance();
     }
+
+    private  HotelFacilityFeatureDAO hotelFacilityFeatureDAO=new HotelFacilityFeatureDAO();
 
     public ArrayList<Hotel> findAll(){
         ArrayList<Hotel> hotelList = new ArrayList<>();
@@ -63,6 +66,44 @@ public class HotelDao {
         return obj;
     }
 
+
+
+    public Hotel saveOnlyHotel (Hotel hotel){
+        String query = "INSERT INTO public.hotel"+
+                "( "+
+                "hotel_name,"+
+                "hotel_adress,"+
+                "hotel_mail,"+
+                "hotel_mpno,"+
+                "hotel_star,"+
+                "hotel_strt_date,"+
+                "hotel_fnsh_date"+
+                ")"+
+                "VALUES (?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement pr = con.prepareStatement(query);
+            pr.setString(1,hotel.getName());
+            pr.setString(2,hotel.getAdress());
+            pr.setString(3,hotel.getMail());
+            pr.setString(4,hotel.getMpno());
+            pr.setString(5,hotel.getStar().toString());
+            pr.setDate(6,hotel.getStrt_date());
+            pr.setDate(7,hotel.getFnsh_date());
+            int rowCount=  pr.executeUpdate();
+            if (rowCount>0){
+                ResultSet generatedKeys = pr.getGeneratedKeys();
+                if (generatedKeys.next()){
+                    hotel.setId(generatedKeys.getInt(1));
+                }
+                return hotel;
+            }
+
+
+        }catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+        return hotel;
+    }
     public boolean save (Hotel hotel){
         String query = "INSERT INTO public.hotel"+
                 "( "+
@@ -81,7 +122,7 @@ public class HotelDao {
             pr.setString(2,hotel.getAdress());
             pr.setString(3,hotel.getMail());
             pr.setString(4,hotel.getMpno());
-            pr.setString(5,hotel.getStar());
+            pr.setString(5,hotel.getStar().toString());
             pr.setDate(6,hotel.getStrt_date());
             pr.setDate(7,hotel.getFnsh_date());
             int rowCount=  pr.executeUpdate();
@@ -92,6 +133,7 @@ public class HotelDao {
                 }
                 return true;
             }
+
 
         }catch (SQLException throwables){
             throwables.printStackTrace();
@@ -115,7 +157,7 @@ public class HotelDao {
             pr.setString(2,hotel.getAdress());
             pr.setString(3,hotel.getMail());
             pr.setString(4,hotel.getMpno());
-            pr.setString(5,hotel.getStar());
+            pr.setString(5,hotel.getStar().toString());
             pr.setDate(6,hotel.getStrt_date());
             pr.setDate(7,hotel.getFnsh_date());
             pr.setInt(8,hotel.getId());

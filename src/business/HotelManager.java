@@ -2,13 +2,18 @@ package business;
 
 import core.Helper;
 import dao.HotelDao;
+import dao.HotelFacilityFeatureDAO;
 import entity.Hotel;
+import entity.HotelFacilityFeature;
 import entity.User;
 
 import java.util.ArrayList;
 
 public class HotelManager {
     private HotelDao hotelDao= new HotelDao();
+    private HotelFacilityFeatureDAO hotelFacilityFeatureDAO=new HotelFacilityFeatureDAO();
+
+
 
     public Hotel getById(int id){
         return this.hotelDao.getById(id);
@@ -61,6 +66,15 @@ public class HotelManager {
 
     public boolean add(Hotel hotel) {
         return this.save(hotel);
+    }
+
+    public boolean saveHotelAndFacilityFeature(Hotel hotel, ArrayList<HotelFacilityFeature> hotelFacilityFeatures){
+        hotelDao.saveOnlyHotel(hotel);
+        for (HotelFacilityFeature hotelFacilityFeature:hotelFacilityFeatures){
+             hotelFacilityFeature.setOtelId(hotel.getId());
+             hotelFacilityFeatureDAO.save(hotelFacilityFeature);
+        }
+        return  true;
     }
 
 }
