@@ -3,16 +3,19 @@ package business;
 import core.Helper;
 import dao.HotelDao;
 import dao.HotelFacilityFeatureDAO;
+import dao.HotelHostelTypeDAO;
 import entity.Hotel;
 import entity.HotelFacilityFeature;
+import entity.HotelHostelType;
 import entity.User;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class HotelManager {
     private HotelDao hotelDao= new HotelDao();
     private HotelFacilityFeatureDAO hotelFacilityFeatureDAO=new HotelFacilityFeatureDAO();
-
+    private HotelHostelTypeDAO hotelHostelTypeDAO = new HotelHostelTypeDAO();
 
 
     public Hotel getById(int id){
@@ -34,8 +37,11 @@ public class HotelManager {
             rowObject[i++] = obj.getMail();
             rowObject[i++] = obj.getMpno();
             rowObject[i++] = obj.getStar();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             rowObject[i++] = obj.getStrt_date();
             rowObject[i++] = obj.getFnsh_date();
+            rowObject[i++] = obj.getFacilityFeature();
+            rowObject[i++] = obj.getHostelType();
             hotelObjList.add(rowObject);
         }
         return hotelObjList;
@@ -68,13 +74,6 @@ public class HotelManager {
         return this.save(hotel);
     }
 
-    public boolean saveHotelAndFacilityFeature(Hotel hotel, ArrayList<HotelFacilityFeature> hotelFacilityFeatures){
-        hotelDao.saveOnlyHotel(hotel);
-        for (HotelFacilityFeature hotelFacilityFeature:hotelFacilityFeatures){
-             hotelFacilityFeature.setOtelId(hotel.getId());
-             hotelFacilityFeatureDAO.save(hotelFacilityFeature);
-        }
-        return  true;
-    }
+
 
 }

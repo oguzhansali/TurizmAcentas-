@@ -6,6 +6,9 @@ public class HotelFacilityFeature {
 
     private int otelId;
 
+    public HotelFacilityFeature(String string) {
+    }
+
     public int getOtelId() {
         return otelId;
     }

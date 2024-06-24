@@ -32,13 +32,13 @@ public class HotelFacilityFeatureDAO {
         return hotelFacilityFeaturesList;
     }
     public boolean save (HotelFacilityFeature hotelFacilityFeature){
-        String query = "INSERT INTO public.hotel_facility_feature (facility_type,otel_id) VALUES (?,?)";
+        String query = "INSERT INTO public.hotel_facility_feature (facility_type,hotel_id) VALUES (?,?)";
         try {
             PreparedStatement pr = this.con.prepareStatement(query);
             pr.setString(1, hotelFacilityFeature.getFacilityType());
             pr.setInt(2,hotelFacilityFeature.getOtelId());
 
-            return pr.executeUpdate() !=-1;
+            return pr.executeUpdate() !=0;
         }catch (SQLException throwables){
             throwables.printStackTrace();
         }
