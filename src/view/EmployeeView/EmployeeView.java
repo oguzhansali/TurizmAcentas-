@@ -3,19 +3,19 @@ package view.EmployeeView;
 import business.HotelManager;
 import business.RoomManager;
 import business.UserManager;
+import core.ComboItem;
 import core.Helper;
 import entity.Hotel;
 import entity.Room;
 import entity.User;
+import org.postgresql.jdbc2.ArrayAssistant;
 import view.HotelView;
 import view.Layout;
+import view.RoomView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class EmployeeView extends Layout {
@@ -29,6 +29,16 @@ public class EmployeeView extends Layout {
     private JPanel pnl_room;
     private JTable tbl_room;
     private JScrollPane scrl_room;
+    private JComboBox cmb_room_roomtype;
+    private JComboBox cmb_room_television;
+    private JComboBox cmb_room_minibar;
+    private JComboBox cmb_room_gameconsole;
+    private JComboBox cmb_room_safe;
+    private JComboBox cmb_room_projection;
+    private JButton btn_cancel_room;
+    private JButton btn_search_room;
+    private JTextField fld_room_bed_count;
+    private JComboBox cmb_rooms_hotel;
     private UserManager userManager;
     private Hotel hotel;
     private HotelManager hotelManager;
@@ -39,7 +49,7 @@ public class EmployeeView extends Layout {
     private User user;
     private Room room;
     private RoomManager roomManager;
-
+    private Object[] col_room;
     public EmployeeView(User user){
         this.userManager = new UserManager();
         this.hotelManager=new HotelManager();
@@ -110,8 +120,6 @@ public class EmployeeView extends Layout {
         this.scrl_room.setComponentPopupMenu(room_menu);
 
 
-
-
     }
     public void loadHotelTable(){
         Object[] col_hotel = {"Otel ID",
@@ -176,6 +184,75 @@ public class EmployeeView extends Layout {
         Object[] col_room={"Oda ID","Otel ID","Yatak Sayısı","Oda Boyutu","Oda Adet","Oda Tipi","Televizyon","Mini Bar","Oyun Konsolu","Kasa","Projeksiyon"};
         ArrayList<Object[]> roomList = this.roomManager.getForTable(col_room.length,this.roomManager.findAll());
         this.createTable(this.tmdl_room,this.tbl_room,col_room,roomList);
+    }
+
+    public void loadRoomCompanent(){
+        tableRowSelected(this.tbl_room);
+        this.room_menu = new JPopupMenu();
+        this.room_menu.add("Yeni").addActionListener(e -> {
+            RoomView roomView = new RoomView(new Room());
+            roomView.addWindowListener(new WindowAdapter(){
+                @Override
+                public void windowClosed(WindowEvent e){
+                    loadRoomTable();
+                }
+            });
+        });
+
+        this.room_menu.add("Güncelle").addActionListener(e -> {
+            int selectModelId = this.getTableSelectedRow(tbl_room, 0);
+            RoomView roomView = new RoomView(this.roomManager.getById(selectModelId));
+            roomView.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadRoomTable();
+                }
+            });
+        });
+        this.room_menu.add("Sil").addActionListener(e -> {
+            if (Helper.confirm("sure")) {
+                int selectRoomId = this.getTableSelectedRow(tbl_room, 0);
+                if (this.roomManager.delete(selectRoomId)) {
+                    Helper.showMsg("done");
+                    loadRoomTable();
+                } else {
+                    Helper.showMsg("error");
+                }
+            }
+
+        });
+
+        btn_search_room.addActionListener(e -> {
+            ComboItem selectedHotel = (ComboItem) this.cmb_rooms_hotel.getSelectedItem();
+            int hotelId = 0;
+            if (selectedHotel != null) {
+                hotelId = selectedHotel.getKey();
+            }
+            ArrayList<Room> roomList = this.roomManager.searchForTable(
+                    hotelId,
+                    (Room.RoomType) cmb_room_roomtype.getSelectedItem(),
+                    (Room.Television) cmb_room_television.getSelectedItem(),
+                    (Room.MiniBar) cmb_room_minibar.getSelectedItem(),
+                    (Room.GameConsole) cmb_room_gameconsole.getSelectedItem(),
+                    (Room.Safe) cmb_room_safe.getSelectedItem(),
+                    (Room.Projection) cmb_room_projection.getSelectedItem(),
+                    fld_room_bed_count.getText()
+            );
+            ArrayList<Object[]> roomRowListBySearch = this.roomManager.getForTable(this.col_room.length, roomList);
+            loadRoomTable(roomRowListBySearch);
+        });
+        btn_cancel_room.addActionListener(e -> {
+            this.cmb_room_roomtype.setSelectedItem(null);
+            this.cmb_room_television.setSelectedItem(null);
+            this.cmb_room_minibar.setSelectedItem(null);
+            this.cmb_room_gameconsole.setSelectedItem(null);
+            this.cmb_room_safe.setSelectedItem(null);
+            this.cmb_room_projection.setSelectedItem(null);
+
+        });
+
+
+
     }
 
 

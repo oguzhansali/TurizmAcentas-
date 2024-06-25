@@ -59,7 +59,7 @@ public class RoomManager {
     public ArrayList<Room> getByListHotelId(int hotelId){
         return this.roomDao.getByListHotelId(hotelId);
     }
-    public ArrayList<Room> searchForTable(int hotelId,Room.RoomType roomType,Room.Television television,Room.MiniBar miniBar,Room.GameConsole gameConsole,Room.Safe safe,Room.Projection projection){
+    public ArrayList<Room> searchForTable(int hotelId, Room.RoomType roomType, Room.Television television, Room.MiniBar miniBar, Room.GameConsole gameConsole, Room.Safe safe, Room.Projection projection, String text){
         String select = "SELET * FROM public.room";
         ArrayList<String> whereList=new ArrayList<>();
 
