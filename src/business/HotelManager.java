@@ -40,8 +40,8 @@ public class HotelManager {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             rowObject[i++] = obj.getStrt_date();
             rowObject[i++] = obj.getFnsh_date();
-            rowObject[i++] = obj.getFacilityFeature();
             rowObject[i++] = obj.getHostelType();
+            rowObject[i++] = obj.getFacilityFeature();
             hotelObjList.add(rowObject);
         }
         return hotelObjList;

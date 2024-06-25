@@ -2,11 +2,8 @@ package entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 
 public class Hotel {
-
     private int id;
     private String name;
     private String adress;
@@ -15,17 +12,8 @@ public class Hotel {
     private Star star;
     private LocalDate strt_date;
     private LocalDate fnsh_date;
-    private ArrayList<HostelType> hostelType;
-    private ArrayList<FacilityFeature> facilityFeatures;
-
-    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, LocalDate strtDate, LocalDate fnshDate, ArrayList<HostelType> hostelTypes, ArrayList<FacilityFeature> facilityFeatures) {
-    }
-
-    public void setHostelTypes(ArrayList<Hotel.HostelType> hostelTypes) {
-    }
-
-    public void setFacilityFeatures(ArrayList<FacilityFeature> facilityFeatures) {
-    }
+    private HostelType hostelTypes;
+    private FacilityFeature facilityFeatures;
 
 
     public enum Star{
@@ -43,7 +31,6 @@ public class Hotel {
         YARIM_PANSIYON,
         SADECE_YATAK,
         ALKOL_HARIÇ_FULL_CREDIT
-
     }
     public  enum FacilityFeature{
         UCRETSIZ_OTOPARK,
@@ -53,10 +40,10 @@ public class Hotel {
         HOTEL_CONCIERGE,
         SPA,
         TUM_GUN_ODA_SERVISI
-
     }
 
-    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, LocalDate strt_date, LocalDate fnsh_date,FacilityFeature facilityFeature,HostelType hostelType) {
+
+    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, LocalDate strt_date, LocalDate fnsh_date,HostelType hostelTypes,FacilityFeature facilityFeatures) {
         this.id = id;
         this.name = name;
         this.adress = adress;
@@ -65,13 +52,13 @@ public class Hotel {
         this.star = star;
         this.strt_date = strt_date;
         this.fnsh_date = fnsh_date;
-        this.facilityFeatures=new ArrayList<>();
-        this.hostelType=new ArrayList<>();
+        this.facilityFeatures=facilityFeatures;
+        this.hostelTypes=hostelTypes;
     }
 
+
+
     public Hotel() {
-        this.hostelType = new ArrayList<>();
-        this.facilityFeatures=new ArrayList<>();
 
     }
 
@@ -120,12 +107,7 @@ public class Hotel {
     }
 
     public void setStar(String star) {
-        try {
-            this.star = Star.valueOf(star);
-        }catch (IllegalArgumentException e){
-            System.err.println("Geçersiz star değeri :" + star);
-            e.printStackTrace();
-        }
+        this.star= Star.valueOf(star);
 
     }
 
@@ -145,21 +127,37 @@ public class Hotel {
         this.fnsh_date = fnsh_date;
     }
 
-    public ArrayList<HostelType> getHostelType() {
-        return hostelType;
+    public HostelType  getHostelType() {
+        return hostelTypes;
     }
 
-    public void setHostelType(ArrayList<HostelType> hostelType) {
-        this.hostelType = hostelType;
-    }
-
-    public ArrayList<FacilityFeature> getFacilityFeature() {
+    public FacilityFeature getFacilityFeature() {
         return facilityFeatures;
     }
 
-    public void setFacilityFeature(ArrayList<FacilityFeature> facilityFeature) {
-        this.facilityFeatures = facilityFeature;
+
+    public void setStar(Star star) {
+        this.star = star;
     }
+
+    public void setHostelTypes(HostelType hostelTypes) {
+        this.hostelTypes = hostelTypes;
+    }
+
+    public void setFacilityFeatures(FacilityFeature facilityFeatures) {
+        this.facilityFeatures = facilityFeatures;
+    }
+
+    /*
+    public void addHostelType(HostelType type){
+        this.hostelTypes.add(type);
+    }
+    public void addFacilityFeature(FacilityFeature feature){
+        this.facilityFeatures.add(feature);
+    }
+
+     */
+
 
     @Override
     public String toString() {
@@ -172,7 +170,7 @@ public class Hotel {
                 ", star=" + star +
                 ", strt_date=" + strt_date +
                 ", fnsh_date=" + fnsh_date +
-                ", hostelType=" + hostelType +
+                ", hostelType=" + hostelTypes +
                 ", facilityFeature=" + facilityFeatures  +
                 '}';
     }

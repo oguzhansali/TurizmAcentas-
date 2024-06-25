@@ -84,19 +84,31 @@ public class HotelView extends Layout {
                     newHotel.setMpno(fld_hotel_mpno.getText());
                     newHotel.setStar(String.valueOf((Hotel.Star) cmb_hotel_star.getSelectedItem()));
 
-                    // Set hostel types
-                    ArrayList<Hotel.HostelType> hostelTypes = new ArrayList<>();
-                    hostelTypes.add((Hotel.HostelType) cmb_hostel1.getSelectedItem());
-                    hostelTypes.add((Hotel.HostelType) cmb_hostel2.getSelectedItem());
-                    newHotel.setHostelTypes(hostelTypes);
+                    newHotel.setHostelTypes(Hotel.HostelType.valueOf(String.valueOf(cmb_hostel1.getSelectedItem())));
+                    newHotel.setHostelTypes(Hotel.HostelType.valueOf(String.valueOf(cmb_hostel2.getSelectedItem())));
+                    newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility1.getSelectedItem())));
+                    newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility2.getSelectedItem())));
+                    newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility3.getSelectedItem())));
 
-                    // Set facility features
-                    ArrayList<Hotel.FacilityFeature> facilityFeatures = new ArrayList<>();
-                    facilityFeatures.add((Hotel.FacilityFeature) cmb_facility1.getSelectedItem());
-                    facilityFeatures.add((Hotel.FacilityFeature) cmb_facility2.getSelectedItem());
-                    facilityFeatures.add((Hotel.FacilityFeature) cmb_facility3.getSelectedItem());
-                    newHotel.setFacilityFeatures(facilityFeatures);
 
+                    /*
+                    try {
+                        // Set hostel types
+                        ArrayList<Hotel.HostelType> hostelTypes = new ArrayList<>();
+                        hostelTypes.add((Hotel.HostelType) cmb_hostel1.getSelectedItem());
+                        hostelTypes.add((Hotel.HostelType) cmb_hostel2.getSelectedItem());
+                        newHotel.setHostelTypes(hostelTypes);
+
+                        // Set facility features
+                        ArrayList<Hotel.FacilityFeature> facilityFeatures = new ArrayList<>();
+                        facilityFeatures.add((Hotel.FacilityFeature) cmb_facility1.getSelectedItem());
+                        facilityFeatures.add((Hotel.FacilityFeature) cmb_facility2.getSelectedItem());
+                        facilityFeatures.add((Hotel.FacilityFeature) cmb_facility3.getSelectedItem());
+                        newHotel.setFacilityFeatures(facilityFeatures);
+                    }catch (ClassCastException exc){
+                        exc.printStackTrace();
+                    }
+                                      */
 
                     try {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
