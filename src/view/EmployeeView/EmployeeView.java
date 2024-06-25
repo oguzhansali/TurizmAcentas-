@@ -192,6 +192,7 @@ public class EmployeeView extends Layout {
     }
 
     public void loadRoomCompanent(){
+        //ComboBoxları setleme işlemi burda yapılacak.
         this.cmb_room_roomtype.setModel(new DefaultComboBoxModel<>(Room.RoomType.values()));
         tableRowSelected(this.tbl_room);
         this.room_menu = new JPopupMenu();
