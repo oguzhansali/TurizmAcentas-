@@ -49,14 +49,14 @@ public class HotelManager {
     }
     public boolean update(Hotel hotel){
         if (this.getById(hotel.getId())==null){
-            Helper.showMsg(hotel.getId()+ " ID kayıtlı user bulunamadı.");
+            Helper.showMsg(hotel.getId()+ " ID kayıtlı hotel bulunamadı.");
             return false;
         }
         return this.hotelDao.update(hotel);
     }
     public boolean delete(int id){
         if (this.getById(id)==null){
-            Helper.showMsg(id+ " ID kayıtlı user bulunamadı");
+            Helper.showMsg(id+ " ID kayıtlı hotel bulunamadı");
             return false;
         }
         return this.hotelDao.delete(id);

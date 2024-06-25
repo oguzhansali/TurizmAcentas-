@@ -110,7 +110,6 @@ public class Hotel {
         this.star= Star.valueOf(star);
 
     }
-
     public LocalDate getStrt_date() {
         return  strt_date;
     }

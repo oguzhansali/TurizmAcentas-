@@ -24,6 +24,9 @@ public class EmployeeView extends Layout {
     private JPanel pnl_hotel;
     private JScrollPane scrl_hotel;
     private JTable tbl_hotel;
+    private JPanel pnl_room;
+    private JTable tbl_room;
+    private JScrollPane scrl_room;
     private JTable tbl_facility_feature;
     private UserManager userManager;
     private Hotel hotel;
@@ -31,6 +34,7 @@ public class EmployeeView extends Layout {
     private DefaultTableModel tmdl_hotel = new DefaultTableModel();
     private DefaultTableModel tmdl_facility_feature = new DefaultTableModel();
     private JPopupMenu hotel_menu;
+    private JPopupMenu room_menu;
     private JPopupMenu facility_feature_menu;
     private User user;
 
@@ -78,25 +82,25 @@ public class EmployeeView extends Layout {
 
 
         //Sağ tıklama sorununu bu şekilde çözdüm!!!
-//        this.tbl_facility_feature.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                showPopup(e);
-//            }
-//
-//            @Override
-//            public void mouseReleased(MouseEvent e) {
-//                showPopup(e);
-//            }
-//
-//            private void showPopup(MouseEvent e) {
-//                if (e.isPopupTrigger()) {
-//                    facility_feature_menu.show(e.getComponent(), e.getX(), e.getY());
-//                }
-//            }
-//        });
-//
-//        this.tbl_facility_feature.setComponentPopupMenu(facility_feature_menu);
+        this.tbl_room.addMouseListener(new MouseAdapter() {
+            @Override
+           public void mousePressed(MouseEvent e) {
+               showPopup(e);
+           }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                showPopup(e);
+           }
+
+            private void showPopup(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    room_menu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+        this.tbl_room.setComponentPopupMenu(room_menu);
+        this.scrl_room.setComponentPopupMenu(room_menu);
 
 
 

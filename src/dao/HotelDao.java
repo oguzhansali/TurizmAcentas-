@@ -82,10 +82,7 @@ public class HotelDao {
         }
 
  */
-
-
         return newHotel;
-
     }
 
 
