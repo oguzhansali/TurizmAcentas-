@@ -1,9 +1,11 @@
 package view.EmployeeView;
 
 import business.HotelManager;
+import business.RoomManager;
 import business.UserManager;
 import core.Helper;
 import entity.Hotel;
+import entity.Room;
 import entity.User;
 import view.HotelView;
 import view.Layout;
@@ -27,20 +29,22 @@ public class EmployeeView extends Layout {
     private JPanel pnl_room;
     private JTable tbl_room;
     private JScrollPane scrl_room;
-    private JTable tbl_facility_feature;
     private UserManager userManager;
     private Hotel hotel;
     private HotelManager hotelManager;
     private DefaultTableModel tmdl_hotel = new DefaultTableModel();
-    private DefaultTableModel tmdl_facility_feature = new DefaultTableModel();
+    private DefaultTableModel tmdl_room = new DefaultTableModel();
     private JPopupMenu hotel_menu;
     private JPopupMenu room_menu;
-    private JPopupMenu facility_feature_menu;
     private User user;
+    private Room room;
+    private RoomManager roomManager;
 
     public EmployeeView(User user){
         this.userManager = new UserManager();
         this.hotelManager=new HotelManager();
+        this.roomManager=new RoomManager();
+
         this.add(container);
         this.guiInitilaze(1500,1000);
         this.user=user;
@@ -53,6 +57,9 @@ public class EmployeeView extends Layout {
         //Hotel Tab Menu.
         loadHotelTable();
         loadHotelComponent();
+
+        //Room Menu
+        loadRoomTable();
 
 
 
@@ -164,6 +171,11 @@ public class EmployeeView extends Layout {
                 }
             }
         });
+    }
+    public void loadRoomTable(){
+        Object[] col_room={"Oda ID","Otel ID","Yatak Sayısı","Oda Boyutu","Oda Adet","Oda Tipi","Televizyon","Mini Bar","Oyun Konsolu","Kasa","Projeksiyon"};
+        ArrayList<Object[]> roomList = this.roomManager.getForTable(col_room.length,this.roomManager.findAll());
+        this.createTable(this.tmdl_room,this.tbl_room,col_room,roomList);
     }
 
 

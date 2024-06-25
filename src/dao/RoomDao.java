@@ -16,6 +16,7 @@ public class RoomDao {
 
     public RoomDao(){
         this.con= Db.getInstance();
+        this.hotelDao = new HotelDao();
     }
 
     public Room getById(int id){
