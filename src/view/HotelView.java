@@ -1,20 +1,13 @@
 package view;
 
 import business.HotelManager;
-import core.ComboItem;
 import core.Helper;
 import entity.Hotel;
-import entity.HotelFacilityFeature;
-import entity.HotelHostelType;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.event.WindowAdapter;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 
 public class HotelView extends Layout {
     private JPanel container;

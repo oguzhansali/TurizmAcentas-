@@ -2,21 +2,13 @@ package business;
 
 import core.Helper;
 import dao.HotelDao;
-import dao.HotelFacilityFeatureDAO;
-import dao.HotelHostelTypeDAO;
 import entity.Hotel;
-import entity.HotelFacilityFeature;
-import entity.HotelHostelType;
-import entity.User;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class HotelManager {
     private HotelDao hotelDao= new HotelDao();
-    private HotelFacilityFeatureDAO hotelFacilityFeatureDAO=new HotelFacilityFeatureDAO();
-    private HotelHostelTypeDAO hotelHostelTypeDAO = new HotelHostelTypeDAO();
-
 
     public Hotel getById(int id){
         return this.hotelDao.getById(id);

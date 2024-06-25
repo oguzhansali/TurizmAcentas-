@@ -2,8 +2,6 @@ package dao;
 
 import core.Db;
 import entity.Hotel;
-import entity.HotelFacilityFeature;
-import entity.User;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -17,7 +15,6 @@ public class HotelDao {
         this.con= Db.getInstance();
     }
 
-    private  HotelFacilityFeatureDAO hotelFacilityFeatureDAO=new HotelFacilityFeatureDAO();
 
     public ArrayList<Hotel> findAll(){
         ArrayList<Hotel> hotelList = new ArrayList<>();
