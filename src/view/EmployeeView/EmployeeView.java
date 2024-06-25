@@ -49,7 +49,7 @@ public class EmployeeView extends Layout {
     private User user;
     private Room room;
     private RoomManager roomManager;
-    private Object[] col_room;
+    private static  Object[] col_room={"Oda ID","Otel Name","Yatak Sayısı","Oda Boyutu","Oda Adet","Oda Tipi","Televizyon","Mini Bar","Oyun Konsolu","Kasa","Projeksiyon"};
     public EmployeeView(User user){
         this.userManager = new UserManager();
         this.hotelManager=new HotelManager();
@@ -70,6 +70,7 @@ public class EmployeeView extends Layout {
 
         //Room Menu
         loadRoomTable();
+        loadRoomCompanent();
 
 
 
@@ -181,12 +182,17 @@ public class EmployeeView extends Layout {
         });
     }
     public void loadRoomTable(){
-        Object[] col_room={"Oda ID","Otel ID","Yatak Sayısı","Oda Boyutu","Oda Adet","Oda Tipi","Televizyon","Mini Bar","Oyun Konsolu","Kasa","Projeksiyon"};
+
         ArrayList<Object[]> roomList = this.roomManager.getForTable(col_room.length,this.roomManager.findAll());
+        this.createTable(this.tmdl_room,this.tbl_room,col_room,roomList);
+    }
+    public void loadRoomTable( ArrayList<Object[]> roomRowListBySearch){
+        ArrayList<Object[]> roomList = roomRowListBySearch;
         this.createTable(this.tmdl_room,this.tbl_room,col_room,roomList);
     }
 
     public void loadRoomCompanent(){
+        this.cmb_room_roomtype.setModel(new DefaultComboBoxModel<>(Room.RoomType.values()));
         tableRowSelected(this.tbl_room);
         this.room_menu = new JPopupMenu();
         this.room_menu.add("Yeni").addActionListener(e -> {
@@ -248,6 +254,7 @@ public class EmployeeView extends Layout {
             this.cmb_room_gameconsole.setSelectedItem(null);
             this.cmb_room_safe.setSelectedItem(null);
             this.cmb_room_projection.setSelectedItem(null);
+            this.loadRoomTable();
 
         });
 

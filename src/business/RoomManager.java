@@ -21,7 +21,7 @@ public class RoomManager {
             int i = 0;
             Object[] rowObject = new Object[size];
             rowObject[i++] = obj.getId();
-            rowObject[i++] = obj.getHotel_id();
+            rowObject[i++] = obj.getHotel().getName();
             rowObject[i++] = obj.getBed_count();
             rowObject[i++] = obj.getSquaremeter();
             rowObject[i++] = obj.getStock();
@@ -60,14 +60,14 @@ public class RoomManager {
         return this.roomDao.getByListHotelId(hotelId);
     }
     public ArrayList<Room> searchForTable(int hotelId, Room.RoomType roomType, Room.Television television, Room.MiniBar miniBar, Room.GameConsole gameConsole, Room.Safe safe, Room.Projection projection, String text){
-        String select = "SELET * FROM public.room";
+        String select = "SELECT * FROM public.room";
         ArrayList<String> whereList=new ArrayList<>();
 
         if (hotelId!=0){
             whereList.add("room_hotel_id = " + hotelId);
         }
         if (roomType!=null){
-            whereList.add("room_room_type=' "+ roomType.toString()+"'");
+            whereList.add("room_room_type='"+ roomType.toString()+"'");
         }
         if (television!=null){
             whereList.add("room_television=' "+television.toString()+"'");
