@@ -40,7 +40,7 @@ public class EmployeeView extends Layout {
     private JButton btn_cancel_room;
     private JButton btn_search_room;
     private JTextField fld_room_bed_count;
-    private JComboBox<ComboItem> cmb_rooms_hotel;
+    private JComboBox<String> cmb_rooms_hotel;
     private UserManager userManager;
     private Hotel hotel;
     private HotelManager hotelManager;
