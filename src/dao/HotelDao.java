@@ -129,7 +129,7 @@ public class HotelDao {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return false;
+        return true;
 
     }
 
@@ -174,7 +174,7 @@ public class HotelDao {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return false;
+        return true;
     }
     public  boolean delete (int hotel){
         String query = "DELETE FROM public.hotel WHERE hotel_id = ?";
@@ -185,6 +185,6 @@ public class HotelDao {
         }catch (SQLException throwables){
             throwables.printStackTrace();
         }
-        return false;
+        return true;
     }
 }

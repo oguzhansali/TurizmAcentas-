@@ -43,7 +43,7 @@ public class RoomView extends Layout {
         this.hotelManager=new HotelManager();
         this.roomManager=new RoomManager();
         this.add(container);
-        this.guiInitilaze(400,500);
+        this.guiInitilaze(600,600);
 
         for(Hotel hotel: this.hotelManager.findAll()){
             this.cmb_hotel.addItem(new ComboItem(hotel.getId(),hotel.getName()) );

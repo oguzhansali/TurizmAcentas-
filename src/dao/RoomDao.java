@@ -57,7 +57,7 @@ public class RoomDao {
     public boolean save(Room room){
         String query = "INSERT INTO public.room"+
                 "("+
-                "room_id, "+
+                //"room_id, "+
                 "room_hotel_id, "+
                 "room_bed_count, "+
                 "room_squarmeter, "+
@@ -69,20 +69,20 @@ public class RoomDao {
                 "room_safe, "+
                 "room_projection"+
                 ")"+
-                " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                " VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pr = con.prepareStatement(query);
-            pr.setInt(1,room.getId());
-            pr.setInt(2,room.getHotel_id());
-            pr.setString(3,room.getBed_count());
-            pr.setString(4,room.getSquaremeter());
-            pr.setString(5,room.getStock());
-            pr.setString(6,room.getRoomType().toString());
-            pr.setString(7,room.getTelevision().toString());
-            pr.setString(8,room.getMiniBar().toString());
-            pr.setString(9,room.getGameConsole().toString());
-            pr.setString(10,room.getSafe().toString());
-            pr.setString(11,room.getProjection().toString());
+            //pr.setInt(1,room.getId());
+            pr.setInt(1,room.getHotel_id());
+            pr.setString(2,room.getBed_count());
+            pr.setString(3,room.getSquaremeter());
+            pr.setString(4,room.getStock());
+            pr.setString(5,room.getRoomType().toString());
+            pr.setString(6,room.getTelevision().toString());
+            pr.setString(7,room.getMiniBar().toString());
+            pr.setString(8,room.getGameConsole().toString());
+            pr.setString(9,room.getSafe().toString());
+            pr.setString(10,room.getProjection().toString());
             return pr.executeUpdate() !=-1;
         }catch (SQLException throwables){
             throwables.printStackTrace();
@@ -134,6 +134,19 @@ public class RoomDao {
         }
         return true;
     }
+
+    public boolean deleteRoomsByHotelId(int hotelId){
+        String query = "DELETE FROM public.room WHERE room_hotel_id = ?";
+        try {
+            PreparedStatement pr = con.prepareStatement(query);
+            pr.setInt(1,hotelId);
+            return pr.executeUpdate() !=-1;
+        }catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+        return true;
+    }
+
 
     public Room match(ResultSet rs) throws SQLException{
         Room room = new Room();

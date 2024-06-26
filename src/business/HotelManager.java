@@ -2,6 +2,7 @@ package business;
 
 import core.Helper;
 import dao.HotelDao;
+import dao.RoomDao;
 import entity.Hotel;
 
 import java.time.format.DateTimeFormatter;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 
 public class HotelManager {
     private HotelDao hotelDao= new HotelDao();
+    private RoomDao roomDao=new RoomDao();
 
     public Hotel getById(int id){
         return this.hotelDao.getById(id);
@@ -59,6 +61,7 @@ public class HotelManager {
             Helper.showMsg(id+ " ID kayıtlı hotel bulunamadı");
             return false;
         }
+        this.roomDao.deleteRoomsByHotelId(id);
         return this.hotelDao.delete(id);
     }
 

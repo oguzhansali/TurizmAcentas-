@@ -145,6 +145,7 @@ public class EmployeeView extends Layout {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     loadHotelTable();
+                    loadRoomTable();
                 }
             });
             hotelView.setVisible(true);
@@ -158,6 +159,7 @@ public class EmployeeView extends Layout {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     loadHotelTable();
+                    loadRoomTable();
                 }
             });
             hotelView.setVisible(true);
@@ -169,6 +171,7 @@ public class EmployeeView extends Layout {
                 if (this.hotelManager.delete(selectedHotelId)) {
                     Helper.showMsg("done");
                     loadHotelTable();
+                    loadRoomTable();
                 } else {
                     Helper.showMsg("error");
                 }
@@ -202,7 +205,6 @@ public class EmployeeView extends Layout {
         this.cmb_room_safe.setSelectedItem(null);
         this.cmb_room_projection.setModel(new DefaultComboBoxModel<>(Room.Projection.values()));
         this.cmb_room_projection.setSelectedItem(null);
-
         this.fld_room_bed_count.setText("");
     }
 
@@ -248,15 +250,24 @@ public class EmployeeView extends Layout {
             if (selectedHotel != null) {
                 hotelId = selectedHotel.getKey();
             }
+            Room.RoomType roomType = (Room.RoomType) cmb_room_roomtype.getSelectedItem();
+            Room.Television television = (Room.Television) cmb_room_television.getSelectedItem();
+            Room.MiniBar miniBar = (Room.MiniBar) cmb_room_minibar.getSelectedItem();
+            Room.GameConsole gameConsole = (Room.GameConsole) cmb_room_gameconsole.getSelectedItem();
+            Room.Safe safe = (Room.Safe) cmb_room_safe.getSelectedItem();
+            Room.Projection projection = (Room.Projection) cmb_room_projection.getSelectedItem();
+            String bedCount = fld_room_bed_count.getText();
+
             ArrayList<Room> roomList = this.roomManager.searchForTable(
                     hotelId,
-                    (Room.RoomType) cmb_room_roomtype.getSelectedItem(),
-                    (Room.Television) cmb_room_television.getSelectedItem(),
-                    (Room.MiniBar) cmb_room_minibar.getSelectedItem(),
-                    (Room.GameConsole) cmb_room_gameconsole.getSelectedItem(),
-                    (Room.Safe) cmb_room_safe.getSelectedItem(),
-                    (Room.Projection) cmb_room_projection.getSelectedItem(),
-                    fld_room_bed_count.getText()
+                    roomType,
+                    television,
+                    miniBar,
+                    gameConsole,
+                    safe,
+                    projection,
+                    bedCount
+
             );
             ArrayList<Object[]> roomRowListBySearch = this.roomManager.getForTable(this.col_room.length, roomList);
             loadRoomTable(roomRowListBySearch);
