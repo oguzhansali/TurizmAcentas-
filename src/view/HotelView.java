@@ -5,6 +5,8 @@ import core.Helper;
 import entity.Hotel;
 
 import javax.swing.*;
+import javax.swing.text.MaskFormatter;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -17,14 +19,14 @@ public class HotelView extends Layout {
     private JTextField fld_hotel_mail;
     private JTextField fld_hotel_mpno;
     private JComboBox<Hotel.Star > cmb_hotel_star;
-    private JTextField fld_hotel_season_strt;
-    private JTextField fld_hotel_season_fnsh;
     private JButton btn_hotel_save;
     private JComboBox<Hotel.HostelType> cmb_hostel1;
     private JComboBox<Hotel.FacilityFeature> cmb_facility1;
     private JComboBox<Hotel.HostelType> cmb_hostel2;
     private JComboBox<Hotel.FacilityFeature> cmb_facility2;
     private JComboBox<Hotel.FacilityFeature> cmb_facility3;
+    private JFormattedTextField fld_hotel_season_strt;
+    private JFormattedTextField fld_hotel_season_fnsh;
     private HotelManager hotelManager;
     private Hotel hotel;
 
@@ -82,7 +84,6 @@ public class HotelView extends Layout {
                     newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility1.getSelectedItem())));
                     newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility2.getSelectedItem())));
                     newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility3.getSelectedItem())));
-
 
                     /*
                     try {
@@ -150,6 +151,9 @@ public class HotelView extends Layout {
 
 
      }
+
+
+
 
 
 
