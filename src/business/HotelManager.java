@@ -5,8 +5,10 @@ import dao.HotelDao;
 import dao.RoomDao;
 import entity.Hotel;
 
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HotelManager {
     private HotelDao hotelDao= new HotelDao();
@@ -31,9 +33,11 @@ public class HotelManager {
             rowObject[i++] = obj.getMail();
             rowObject[i++] = obj.getMpno();
             rowObject[i++] = obj.getStar();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            rowObject[i++] = obj.getStrt_date();
-            rowObject[i++] = obj.getFnsh_date();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            rowObject[i++] = obj.getHigh_season_strt_date();
+            rowObject[i++] = obj.getHigh_season_fnsh_date();
+            rowObject[i++] = obj.getLow_season_strt_date();
+            rowObject[i++] = obj.getLow_season_fnsh_date();
             rowObject[i++] = obj.getFacilityFeature();
             rowObject[i++] = obj.getHostelType();
             hotelObjList.add(rowObject);
@@ -67,6 +71,17 @@ public class HotelManager {
 
     public boolean add(Hotel hotel) {
         return this.save(hotel);
+    }
+
+
+    public List<String> getAllHotelNames() {
+        try {
+            return hotelDao.getAllHotelNames();
+        } catch (SQLException e) {
+            // Hata yönetimi burada yapılabilir
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

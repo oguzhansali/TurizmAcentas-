@@ -13,6 +13,8 @@ public class Room {
     private Safe safe;
     private Projection projection;
     private Hotel hotel;
+    private String adult_price;
+    private String kid_price;
 
     public Room() {
 
@@ -46,7 +48,7 @@ public class Room {
         YOK
     }
 
-    public Room(int id, int hotel_id, String bed_count, String squaremeter,String stock, RoomType roomType, Television television, MiniBar miniBar, GameConsole gameConsole, Safe safe, Projection projection) {
+    public Room(int id, int hotel_id, String bed_count, String squaremeter,String stock, RoomType roomType, Television television, MiniBar miniBar, GameConsole gameConsole, Safe safe, Projection projection,String adult_price,String kid_price) {
         this.id = id;
         this.hotel_id = hotel_id;
         this.bed_count = bed_count;
@@ -58,6 +60,8 @@ public class Room {
         this.gameConsole = gameConsole;
         this.safe = safe;
         this.projection = projection;
+        this.adult_price=adult_price;
+        this.kid_price=kid_price;
     }
 
     public int getId() {
@@ -160,20 +164,39 @@ public class Room {
         this.hotel = hotel;
     }
 
+    public String getAdult_price() {
+        return adult_price;
+    }
+
+    public void setAdult_price(String adult_price) {
+        this.adult_price = adult_price;
+    }
+
+    public String getKid_price() {
+        return kid_price;
+    }
+
+    public void setKid_price(String kid_price) {
+        this.kid_price = kid_price;
+    }
+
     @Override
     public String toString() {
         return "Room{" +
                 "id=" + id +
                 ", hotel_id=" + hotel_id +
-                ", bed_count=" + bed_count +
-                ", squaremeter=" + squaremeter +
-                ", stock=" + stock +
+                ", bed_count='" + bed_count + '\'' +
+                ", squaremeter='" + squaremeter + '\'' +
+                ", stock='" + stock + '\'' +
                 ", roomType=" + roomType +
                 ", television=" + television +
                 ", miniBar=" + miniBar +
                 ", gameConsole=" + gameConsole +
                 ", safe=" + safe +
                 ", projection=" + projection +
+                ", hotel=" + hotel +
+                ", adult_price='" + adult_price + '\'' +
+                ", kid_price='" + kid_price + '\'' +
                 '}';
     }
 }

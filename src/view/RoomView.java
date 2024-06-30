@@ -7,8 +7,6 @@ import entity.Hotel;
 import entity.Room;
 import core.ComboItem;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class RoomView extends Layout {
     private JPanel container;
@@ -34,6 +32,10 @@ public class RoomView extends Layout {
     private JButton btn_save;
     private JComboBox cmb_hotel;
     private JLabel lbl_hotel;
+    private JTextField fld_room_adult_price;
+    private JTextField fld_room_kid_price;
+    private JLabel lbl_adult_price;
+    private JLabel lbl_kid_price;
     private Room room;
     private HotelManager hotelManager;
     private RoomManager roomManager;
@@ -67,6 +69,8 @@ public class RoomView extends Layout {
            this.cmb_projection.getModel().setSelectedItem(this.room.getProjection());
            ComboItem defaultRoom = new ComboItem(this.room.getHotel().getId(),this.room.getHotel().getName());
            this.cmb_hotel.getModel().setSelectedItem(defaultRoom);
+           this.fld_room_adult_price.getText();
+           this.fld_room_kid_price.getText();
         }
 
         btn_save.addActionListener(e -> {
@@ -88,6 +92,8 @@ public class RoomView extends Layout {
                 this.room.setSquaremeter(fld_squaremeter.getText());
                 this.room.setBed_count(fld_bed_count.getText());
                 this.room.setHotel_id(selectedHotel.getKey());
+                this.room.setAdult_price(fld_room_adult_price.getText());
+                this.room.setKid_price(fld_room_kid_price.getText());
 
                 if (this.room.getId()!=0){
                     result=this.roomManager.update(this.room);

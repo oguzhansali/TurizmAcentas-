@@ -67,9 +67,11 @@ public class RoomDao {
                 "room_minibar, "+
                 "room_game_console, "+
                 "room_safe, "+
-                "room_projection"+
+                "room_projection,"+
+                "room_adult_price,"+
+                "room_kid_price"+
                 ")"+
-                " VALUES (?,?,?,?,?,?,?,?,?,?)";
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pr = con.prepareStatement(query);
             //pr.setInt(1,room.getId());
@@ -83,6 +85,8 @@ public class RoomDao {
             pr.setString(8,room.getGameConsole().toString());
             pr.setString(9,room.getSafe().toString());
             pr.setString(10,room.getProjection().toString());
+            pr.setString(11,room.getAdult_price());
+            pr.setString(12,room.getKid_price());
             return pr.executeUpdate() !=-1;
         }catch (SQLException throwables){
             throwables.printStackTrace();
@@ -100,7 +104,9 @@ public class RoomDao {
                 "room_minibar = ?, "+
                 "room_game_console = ?, "+
                 "room_safe = ? , "+
-                "room_projection= ?"+
+                "room_projection= ?,"+
+                "room_adult_price= ?, "+
+                "room_kid_price= ? "+
                 " WHERE room_id = ?";
 
         try {
@@ -115,7 +121,9 @@ public class RoomDao {
             pr.setString(8,room.getGameConsole().toString());
             pr.setString(9,room.getSafe().toString());
             pr.setString(10,room.getProjection().toString());
-            pr.setInt(11,room.getId());
+            pr.setString(11,room.getAdult_price());
+            pr.setString(12,room.getKid_price());
+            pr.setInt(13,room.getId());
             return pr.executeUpdate() != -1;
         }catch (SQLException throwables){
             throwables.printStackTrace();
@@ -161,6 +169,8 @@ public class RoomDao {
         room.setGameConsole(Room.GameConsole.valueOf(rs.getString("room_game_console")));
         room.setSafe(Room.Safe.valueOf(rs.getString("room_safe")));
         room.setProjection(Room.Projection.valueOf(rs.getString("room_projection")));
+        room.setAdult_price(rs.getString("room_adult_price"));
+        room.setKid_price(rs.getString("room_kid_price"));
         return room;
     }
 }

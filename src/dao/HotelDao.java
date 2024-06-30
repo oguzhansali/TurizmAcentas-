@@ -7,6 +7,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HotelDao {
     private Connection con;
@@ -23,6 +24,7 @@ public class HotelDao {
         try {
             ResultSet rs = this.con.createStatement().executeQuery(sql);
             while(rs.next()){
+
                 hotelList.add(this.match(rs));
 
             }
@@ -56,17 +58,38 @@ public class HotelDao {
         newHotel.setMail(rs.getString("hotel_mail"));
         newHotel.setMpno(rs.getString("hotel_mpno"));
         newHotel.setStar(rs.getString("hotel_star"));
-        newHotel.setStrt_date(LocalDate.parse(rs.getString("hotel_strt_date")));
-        newHotel.setFnsh_date(LocalDate.parse(rs.getString("hotel_fnsh_date")));
-
+        newHotel.setHigh_season_strt_date(LocalDate.parse(rs.getString("hotel_high_season_strt")));
+        newHotel.setHigh_season_fnsh_date(LocalDate.parse(rs.getString("hotel_high_season_fnsh")));
+        newHotel.setLow_season_strt_date(LocalDate.parse(rs.getString("hotel_low_season_strt")));
+        newHotel.setLow_season_fnsh_date(LocalDate.parse(rs.getString("hotel_low_season_fnsh")));
 
         newHotel.setHostelTypes(Hotel.HostelType.valueOf(rs.getString("hotel_hostel_type")));
         newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(rs.getString("hotel_facility_type")));
 
 
-/*
+
+
+        /*String hostelTypeStr = rs.getString("hotel_hostel_type");
+        String[] strHostelType = hostelTypeStr.split(",");
+
+        List<Hotel.HostelType> hostelTypeList = new ArrayList<>();
+        for (String type : strHostelType) {
+            *//*newHotel.setHostelTypes();*//*
+
+            //hostelTypeList.add((Hotel.HostelType.valueOf(type.trim())));
+
+            *//*try {
+                Hotel.HostelType hostelType = Hotel.HostelType.valueOf(type.trim().toUpperCase());
+                hostelTypeList.add(hostelType);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Geçersiz hostel tipi: " + type);
+            }*//*
+
+        }
+        System.out.println(hostelTypeList);
+
         // Hostel tiplerini ArrayList olarak alabilmek için
-        String[] hostelTypeStrings = rs.getString("hotel_hostel_type").split(",");
+        *//*String[] hostelTypeStrings = rs.getString("hotel_hostel_type").split(",");
         for (String type : hostelTypeStrings) {
             if (!type.isEmpty()) {
                 newHotel.addHostelType(Hotel.HostelType.valueOf(type.trim()));
@@ -79,9 +102,10 @@ public class HotelDao {
             if (!feature.isEmpty()) {
                 newHotel.addFacilityFeature(Hotel.FacilityFeature.valueOf(feature.trim()));
             }
-        }
+        }*/
 
- */
+
+
         return newHotel;
     }
 
@@ -89,9 +113,8 @@ public class HotelDao {
 
     public boolean save (Hotel hotel){
         String query = "INSERT INTO public.hotel " +
-                "(hotel_name, hotel_adress, hotel_mail, hotel_mpno, hotel_star, " +
-                "hotel_strt_date, hotel_fnsh_date, hotel_hostel_type, hotel_facility_type) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "(hotel_name, hotel_adress, hotel_mail, hotel_mpno, hotel_star, hotel_high_season_strt, hotel_high_season_fnsh, hotel_hostel_type, hotel_facility_type, hotel_low_season_strt, hotel_low_season_fnsh) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         try {
             PreparedStatement pr = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             pr.setString(1, hotel.getName());
@@ -99,24 +122,55 @@ public class HotelDao {
             pr.setString(3, hotel.getMail());
             pr.setString(4, hotel.getMpno());
             pr.setString(5, hotel.getStar().toString());
-            pr.setDate(6, Date.valueOf(hotel.getStrt_date()));
-            pr.setDate(7, Date.valueOf(hotel.getFnsh_date()));
+
+            /*pr.setDate(6, Date.valueOf(hotel.getHigh_season_strt_date()));
+            pr.setDate(7, Date.valueOf(hotel.getHigh_season_fnsh_date()));*/
+
+            // Tarihlerin null olup olmadığını kontrol et
+            if (hotel.getHigh_season_strt_date() != null) {
+                pr.setDate(6, Date.valueOf(hotel.getHigh_season_strt_date()));
+            } else {
+                pr.setNull(6, Types.DATE);
+            }
+
+            if (hotel.getHigh_season_fnsh_date() != null) {
+                pr.setDate(7, Date.valueOf(hotel.getHigh_season_fnsh_date()));
+            } else {
+                pr.setNull(7, Types.DATE);
+            }
 
             pr.setString(8,hotel.getHostelType().toString());
             pr.setString(9,hotel.getFacilityFeature().toString());
 
+           /* pr.setDate(10, Date.valueOf(hotel.getLow_season_strt_date()));
+            pr.setDate(11, Date.valueOf(hotel.getLow_season_fnsh_date()));*/
 
 
-            /*
-            // Hostel tiplerini virgülle ayırarak String olarak ekliyoruz
-            String hostelTypeString = String.join(",", hotel.getHostelTypeNames());
+            if (hotel.getLow_season_strt_date() != null) {
+                pr.setDate(10, Date.valueOf(hotel.getLow_season_strt_date()));
+            } else {
+                pr.setNull(10, Types.DATE);
+            }
+
+            if (hotel.getLow_season_fnsh_date() != null) {
+                pr.setDate(11, Date.valueOf(hotel.getLow_season_fnsh_date()));
+            } else {
+                pr.setNull(11, Types.DATE);
+            }
+
+
+            /*// Hostel tiplerini virgülle ayırarak String olarak ekliyoruz
+            String hostelTypeString = String.join(",", hotel.getHostelType().toString());
             pr.setString(8, hostelTypeString);
 
             // Facility feature'larını virgülle ayırarak String olarak ekliyoruz
-            String facilityFeatureString = String.join(",", hotel.getFacilityFeatureNames());
-            pr.setString(9, facilityFeatureString);
+            String facilityFeatureString = String.join(",", hotel.getFacilityFeature().toString());
+            pr.setString(9, facilityFeatureString);*/
 
-             */
+
+
+
+
 
             int rowCount = pr.executeUpdate();
             if (rowCount > 0) {
@@ -140,10 +194,12 @@ public class HotelDao {
                 "hotel_mail = ?, " +
                 "hotel_mpno = ?, " +
                 "hotel_star = ?, " +
-                "hotel_strt_date = ?, " +
-                "hotel_fnsh_date = ?, " +
+                "hotel_high_season_strt = ?, " +
+                "hotel_high_season_fnsh = ?, " +
                 "hotel_hostel_type = ?, " +
-                "hotel_facility_type = ? " +
+                "hotel_facility_type = ?, " +
+                "hotel_low_season_strt= ?,"+
+                "hotel_low_season_fnsh= ?"+
                 "WHERE hotel_id = ?";
         try {
             PreparedStatement pr = con.prepareStatement(query);
@@ -152,11 +208,14 @@ public class HotelDao {
             pr.setString(3, hotel.getMail());
             pr.setString(4, hotel.getMpno());
             pr.setString(5, hotel.getStar().toString());
-            pr.setDate(6, Date.valueOf(hotel.getStrt_date()));
-            pr.setDate(7, Date.valueOf(hotel.getFnsh_date()));
+            pr.setDate(6, Date.valueOf(hotel.getHigh_season_strt_date()));
+            pr.setDate(7, Date.valueOf(hotel.getHigh_season_fnsh_date()));
 
             pr.setString(8,hotel.getHostelType().toString());
             pr.setString(9,hotel.getFacilityFeature().toString());
+
+            pr.setDate(10, Date.valueOf(hotel.getLow_season_strt_date()));
+            pr.setDate(11, Date.valueOf(hotel.getLow_season_fnsh_date()));
 
             /*
             // Hostel tiplerini virgülle ayırarak String olarak ekliyoruz
@@ -186,5 +245,18 @@ public class HotelDao {
             throwables.printStackTrace();
         }
         return true;
+    }
+    public List<String> getAllHotelNames() throws SQLException {
+        List<String> hotelNames = new ArrayList<>();
+        String query = "SELECT hotel_name FROM public.hotel"; // hotel tablosundan otel adlarını alacak sorgu
+
+        try (PreparedStatement stmt = con.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                hotelNames.add(rs.getString("hotel_name"));
+            }
+        }
+
+        return hotelNames;
     }
 }

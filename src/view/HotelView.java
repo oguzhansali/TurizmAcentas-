@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 public class HotelView extends Layout {
     private JPanel container;
@@ -25,8 +26,10 @@ public class HotelView extends Layout {
     private JComboBox<Hotel.HostelType> cmb_hostel2;
     private JComboBox<Hotel.FacilityFeature> cmb_facility2;
     private JComboBox<Hotel.FacilityFeature> cmb_facility3;
-    private JFormattedTextField fld_hotel_season_strt;
-    private JFormattedTextField fld_hotel_season_fnsh;
+    private JTextField fld_hotel_high_season_fnsh;
+    private JTextField fld_hotel_high_season_strt;
+    private JTextField fld_hotel_low_season_strt;
+    private JTextField fld_hotel_low_season_fnsh;
     private HotelManager hotelManager;
     private Hotel hotel;
 
@@ -58,10 +61,35 @@ public class HotelView extends Layout {
             this.cmb_facility2.getModel().setSelectedItem(this.hotel.getFacilityFeature());
             this.cmb_facility3.getModel().setSelectedItem(this.hotel.getFacilityFeature());
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            if (this.hotel.getHigh_season_strt_date() != null) {
+                this.fld_hotel_high_season_strt.setText(this.hotel.getHigh_season_strt_date().format(formatter));
+            }
+
+            if (this.hotel.getHigh_season_fnsh_date() != null) {
+                this.fld_hotel_high_season_fnsh.setText(this.hotel.getHigh_season_fnsh_date().format(formatter));
+            }
+
+            if (this.hotel.getLow_season_strt_date() != null) {
+                this.fld_hotel_low_season_strt.setText(this.hotel.getLow_season_strt_date().format(formatter));
+            }
+
+            if (this.hotel.getLow_season_fnsh_date() != null) {
+                this.fld_hotel_low_season_fnsh.setText(this.hotel.getLow_season_fnsh_date().format(formatter));
+            }
+
+            /*
             // Tarihleri set etme.
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             this.fld_hotel_season_strt.setText(this.hotel.getStrt_date().format(formatter));
             this.fld_hotel_season_fnsh.setText(this.hotel.getFnsh_date().format(formatter));
+
+             */
+
+
+
+
 
         }
 
@@ -85,8 +113,9 @@ public class HotelView extends Layout {
                     newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility2.getSelectedItem())));
                     newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility3.getSelectedItem())));
 
-                    /*
-                    try {
+
+
+                   /* try {
                         // Set hostel types
                         ArrayList<Hotel.HostelType> hostelTypes = new ArrayList<>();
                         hostelTypes.add((Hotel.HostelType) cmb_hostel1.getSelectedItem());
@@ -102,19 +131,58 @@ public class HotelView extends Layout {
                     }catch (ClassCastException exc){
                         exc.printStackTrace();
                     }
-                                      */
+*/
 
+/*
+                    newHotel.setStrt_date(LocalDate.parse(fld_hotel_season_strt,DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+*/
+/*
                     try {
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        LocalDate startDate = LocalDate.parse(fld_hotel_season_strt.getText(), formatter);
-                        LocalDate finishDate = LocalDate.parse(fld_hotel_season_fnsh.getText(), formatter);
-                        newHotel.setStrt_date(startDate);
-                        newHotel.setFnsh_date(finishDate);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        LocalDate highstartDate = LocalDate.parse(fld_hotel_high_season_strt.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        LocalDate hihgFinishDate = LocalDate.parse(fld_hotel_high_season_fnsh.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        LocalDate lowStartDate = LocalDate.parse(fld_hotel_low_season_strt.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        LocalDate lowFinishDate = LocalDate.parse(fld_hotel_low_season_fnsh.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+                        newHotel.setHigh_season_strt_date(highstartDate);
+                        newHotel.setHigh_season_fnsh_date(hihgFinishDate);
+                        newHotel.setLow_season_strt_date(lowStartDate);
+                        newHotel.setLow_season_fnsh_date(lowFinishDate);
+
                     } catch (DateTimeParseException exception) {
                         exception.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Lütfen Tarihleri doğru formatta giriniz (dd-MM-yyyy)");
+                        JOptionPane.showMessageDialog(null, "Lütfen Tarihleri doğru formatta giriniz (dd/MM/yyyy)");
                         return; // Tarih formatı hatası olduğunda işlemi sonlandırır
+                    }*/
+                    try {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        String highSeasonStartStr = fld_hotel_high_season_strt.getText();
+                        String highSeasonFinishStr = fld_hotel_high_season_fnsh.getText();
+                        String lowSeasonStartStr = fld_hotel_low_season_strt.getText();
+                        String lowSeasonFinishStr = fld_hotel_low_season_fnsh.getText();
+
+                        if (highSeasonStartStr.isEmpty() || highSeasonFinishStr.isEmpty() || lowSeasonStartStr.isEmpty() || lowSeasonFinishStr.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Lütfen tüm tarih alanlarını doldurunuz.");
+                            return;
+                        }
+
+                        LocalDate highstartDate = LocalDate.parse(highSeasonStartStr, formatter);
+                        LocalDate highFinishDate = LocalDate.parse(highSeasonFinishStr, formatter);
+                        LocalDate lowStartDate = LocalDate.parse(lowSeasonStartStr, formatter);
+                        LocalDate lowFinishDate = LocalDate.parse(lowSeasonFinishStr, formatter);
+
+                        newHotel.setHigh_season_strt_date(highstartDate);
+                        newHotel.setHigh_season_fnsh_date(highFinishDate);
+                        newHotel.setLow_season_strt_date(lowStartDate);
+                        newHotel.setLow_season_fnsh_date(lowFinishDate);
+
+                    } catch (DateTimeParseException exception) {
+                        exception.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Lütfen tarihleri doğru formatta giriniz (dd/MM/yyyy)");
+                        return;
                     }
+
+
 
                     if (this.hotel != null && this.hotel.getId() != 0) {
                         newHotel.setId(this.hotel.getId());
@@ -134,14 +202,41 @@ public class HotelView extends Layout {
             }
         });
     }
+    private void createUIComponents() throws ParseException {
+        MaskFormatter dateFormatter = new MaskFormatter("##/##/####");
+        dateFormatter.setPlaceholderCharacter('_');
+
+        fld_hotel_high_season_strt = new JTextField(String.valueOf(dateFormatter));
+        //fld_hotel_high_season_strt.setText("10/10/2023");
+
+        fld_hotel_high_season_fnsh = new JTextField(String.valueOf(dateFormatter));
+        //fld_hotel_high_season_fnsh.setText("16/10/2023");
+
+        fld_hotel_low_season_strt = new JTextField(String.valueOf(dateFormatter));
+        //fld_hotel_low_season_strt.setText("01/11/2023");
+
+        fld_hotel_low_season_fnsh = new JTextField(String.valueOf(dateFormatter));
+        //fld_hotel_low_season_fnsh.setText("31/12/2023");
+    }
+
+    /*private void createUIComponents() throws ParseException {
+        this.fld_hotel_season_strt= new JFormattedTextField(new MaskFormatter("##/##/####"));
+        this.fld_hotel_season_strt.setText("10/10/2023");
+        this.fld_hotel_season_fnsh= new JFormattedTextField(new MaskFormatter("##/##/####"));
+        this.fld_hotel_season_fnsh.setText("16/10/2023");
+    }*/
+
+
 
      public boolean checkIsEmpty(){
          return  Helper.isFieldEmpty(this.fld_hotel_name)||
                  Helper.isFieldEmpty(this.fld_hotel_adress)||
                  Helper.isFieldEmpty(this.fld_hotel_mail)||
                  Helper.isFieldEmpty(this.fld_hotel_mpno)||
-                 Helper.isFieldEmpty(this.fld_hotel_season_strt)||
-                 Helper.isFieldEmpty(this.fld_hotel_season_fnsh)||
+                 Helper.isFieldEmpty(this.fld_hotel_high_season_strt)||
+                 Helper.isFieldEmpty(this.fld_hotel_high_season_fnsh)||
+                 Helper.isFieldEmpty(this.fld_hotel_low_season_strt)||
+                 Helper.isFieldEmpty(this.fld_hotel_low_season_fnsh)||
                  this.cmb_hotel_star.getSelectedItem() ==null||
                  this.cmb_facility1.getSelectedItem()==null||
                  this.cmb_facility2.getSelectedItem()==null||

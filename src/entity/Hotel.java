@@ -10,10 +10,13 @@ public class Hotel {
     private String mail;
     private String mpno;
     private Star star;
-    private LocalDate strt_date;
-    private LocalDate fnsh_date;
-    private HostelType hostelTypes;
+    private LocalDate high_season_strt_date;
+    private LocalDate high_season_fnsh_date;
+    private LocalDate low_season_strt_date;
+    private LocalDate low_season_fnsh_date;
+    private HostelType  hostelTypes;
     private FacilityFeature facilityFeatures;
+
 
 
     public enum Star{
@@ -43,20 +46,37 @@ public class Hotel {
     }
 
 
-    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, LocalDate strt_date, LocalDate fnsh_date,HostelType hostelTypes,FacilityFeature facilityFeatures) {
+    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, LocalDate high_season_strt_date, LocalDate high_season_fnsh_date,LocalDate low_season_strt_date,LocalDate low_season_fnsh_date,HostelType  hostelTypes,FacilityFeature  facilityFeatures) {
         this.id = id;
         this.name = name;
         this.adress = adress;
         this.mail = mail;
         this.mpno = mpno;
         this.star = star;
-        this.strt_date = strt_date;
-        this.fnsh_date = fnsh_date;
+        this.high_season_strt_date = high_season_strt_date;
+        this.high_season_fnsh_date = high_season_fnsh_date;
+        this.low_season_strt_date=low_season_strt_date;
+        this.low_season_fnsh_date=low_season_fnsh_date;
         this.facilityFeatures=facilityFeatures;
         this.hostelTypes=hostelTypes;
     }
 
 
+    public LocalDate getLow_season_strt_date() {
+        return low_season_strt_date;
+    }
+
+    public void setLow_season_strt_date(LocalDate low_season_strt_date) {
+        this.low_season_strt_date = low_season_strt_date;
+    }
+
+    public LocalDate getLow_season_fnsh_date() {
+        return low_season_fnsh_date;
+    }
+
+    public void setLow_season_fnsh_date(LocalDate low_season_fnsh_date) {
+        this.low_season_fnsh_date = low_season_fnsh_date;
+    }
 
     public Hotel() {
 
@@ -110,27 +130,27 @@ public class Hotel {
         this.star= Star.valueOf(star);
 
     }
-    public LocalDate getStrt_date() {
-        return  strt_date;
+    public LocalDate getHigh_season_strt_date() {
+        return  high_season_strt_date;
     }
 
-    public void setStrt_date(LocalDate strt_date)  {
-        this.strt_date= strt_date;
+    public void setHigh_season_strt_date(LocalDate high_season_strt_date)  {
+        this.high_season_strt_date= high_season_strt_date;
     }
 
-    public LocalDate getFnsh_date() {
-        return fnsh_date;
+    public LocalDate getHigh_season_fnsh_date() {
+        return high_season_fnsh_date;
     }
 
-    public void setFnsh_date(LocalDate fnsh_date) {
-        this.fnsh_date = fnsh_date;
+    public void setHigh_season_fnsh_date(LocalDate high_season_fnsh_date) {
+        this.high_season_fnsh_date = high_season_fnsh_date;
     }
 
-    public HostelType  getHostelType() {
+    public HostelType   getHostelType() {
         return hostelTypes;
     }
 
-    public FacilityFeature getFacilityFeature() {
+    public FacilityFeature  getFacilityFeature() {
         return facilityFeatures;
     }
 
@@ -139,23 +159,21 @@ public class Hotel {
         this.star = star;
     }
 
-    public void setHostelTypes(HostelType hostelTypes) {
+    public void setHostelTypes(HostelType  hostelTypes) {
         this.hostelTypes = hostelTypes;
     }
 
-    public void setFacilityFeatures(FacilityFeature facilityFeatures) {
+    public void setFacilityFeatures(FacilityFeature  facilityFeatures) {
         this.facilityFeatures = facilityFeatures;
     }
 
-    /*
-    public void addHostelType(HostelType type){
+
+    /*public void addHostelType(HostelType type){
         this.hostelTypes.add(type);
     }
-    public void addFacilityFeature(FacilityFeature feature){
+    public void addFacilityFeature(FacilityFeature feature) {
         this.facilityFeatures.add(feature);
-    }
-
-     */
+    }*/
 
 
     @Override
@@ -167,10 +185,12 @@ public class Hotel {
                 ", mail='" + mail + '\'' +
                 ", mpno='" + mpno + '\'' +
                 ", star=" + star +
-                ", strt_date=" + strt_date +
-                ", fnsh_date=" + fnsh_date +
-                ", hostelType=" + hostelTypes +
-                ", facilityFeature=" + facilityFeatures  +
+                ", high_season_strt_date=" + high_season_strt_date +
+                ", high_season_fnsh_date=" + high_season_fnsh_date +
+                ", low_season_strt_date=" + low_season_strt_date +
+                ", low_season_fnsh_date=" + low_season_fnsh_date +
+                ", hostelTypes=" + hostelTypes +
+                ", facilityFeatures=" + facilityFeatures +
                 '}';
     }
 }
