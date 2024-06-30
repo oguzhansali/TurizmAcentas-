@@ -1,5 +1,7 @@
 package entity;
 
+import org.postgresql.jdbc2.ArrayAssistant;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -14,8 +16,8 @@ public class Hotel {
     private LocalDate high_season_fnsh_date;
     private LocalDate low_season_strt_date;
     private LocalDate low_season_fnsh_date;
-    private HostelType  hostelTypes;
-    private FacilityFeature facilityFeatures;
+    private ArrayList<HostelType>   hostelTypes=new ArrayList<>();
+    private ArrayList< FacilityFeature >facilityFeatures=new ArrayList<>();
 
 
 
@@ -46,7 +48,7 @@ public class Hotel {
     }
 
 
-    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, LocalDate high_season_strt_date, LocalDate high_season_fnsh_date,LocalDate low_season_strt_date,LocalDate low_season_fnsh_date,HostelType  hostelTypes,FacilityFeature  facilityFeatures) {
+    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, LocalDate high_season_strt_date, LocalDate high_season_fnsh_date,LocalDate low_season_strt_date,LocalDate low_season_fnsh_date,ArrayList<HostelType>   hostelTypes,ArrayList< FacilityFeature >facilityFeatures) {
         this.id = id;
         this.name = name;
         this.adress = adress;
@@ -146,11 +148,11 @@ public class Hotel {
         this.high_season_fnsh_date = high_season_fnsh_date;
     }
 
-    public HostelType   getHostelType() {
+    public ArrayList<HostelType>    getHostelType() {
         return hostelTypes;
     }
 
-    public FacilityFeature  getFacilityFeature() {
+    public  ArrayList< FacilityFeature > getFacilityFeature() {
         return facilityFeatures;
     }
 
@@ -159,21 +161,21 @@ public class Hotel {
         this.star = star;
     }
 
-    public void setHostelTypes(HostelType  hostelTypes) {
+    public void setHostelTypes(ArrayList<HostelType >  hostelTypes) {
         this.hostelTypes = hostelTypes;
     }
 
-    public void setFacilityFeatures(FacilityFeature  facilityFeatures) {
+    public void setFacilityFeatures(ArrayList< FacilityFeature >facilityFeatures) {
         this.facilityFeatures = facilityFeatures;
     }
 
 
-    /*public void addHostelType(HostelType type){
+    public void addHostelType(HostelType type){
         this.hostelTypes.add(type);
     }
     public void addFacilityFeature(FacilityFeature feature) {
         this.facilityFeatures.add(feature);
-    }*/
+    }
 
 
     @Override

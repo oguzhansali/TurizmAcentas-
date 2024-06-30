@@ -5,8 +5,10 @@ import core.Helper;
 import entity.Hotel;
 
 import javax.swing.*;
+import javax.swing.text.DateFormatter;
 import javax.swing.text.MaskFormatter;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -30,6 +32,7 @@ public class HotelView extends Layout {
     private JTextField fld_hotel_high_season_strt;
     private JTextField fld_hotel_low_season_strt;
     private JTextField fld_hotel_low_season_fnsh;
+
     private HotelManager hotelManager;
     private Hotel hotel;
 
@@ -39,7 +42,11 @@ public class HotelView extends Layout {
 
         this.add(container);
         this.guiInitilaze(1000,1000);
-
+    /*    try {
+            this.createUIComponents();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }*/
         this.cmb_hotel_star.setModel(new DefaultComboBoxModel<>(Hotel.Star.values()));
         this.cmb_facility1.setModel(new DefaultComboBoxModel<>(Hotel.FacilityFeature.values()));
         this.cmb_facility2.setModel(new DefaultComboBoxModel<>(Hotel.FacilityFeature.values()));
@@ -107,15 +114,15 @@ public class HotelView extends Layout {
                     newHotel.setMpno(fld_hotel_mpno.getText());
                     newHotel.setStar(String.valueOf((Hotel.Star) cmb_hotel_star.getSelectedItem()));
 
-                    newHotel.setHostelTypes(Hotel.HostelType.valueOf(String.valueOf(cmb_hostel1.getSelectedItem())));
+                    /*newHotel.setHostelTypes(Hotel.HostelType.valueOf(String.valueOf(cmb_hostel1.getSelectedItem())));
                     newHotel.setHostelTypes(Hotel.HostelType.valueOf(String.valueOf(cmb_hostel2.getSelectedItem())));
                     newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility1.getSelectedItem())));
                     newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility2.getSelectedItem())));
                     newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(String.valueOf(cmb_facility3.getSelectedItem())));
 
+*/
 
-
-                   /* try {
+                    try {
                         // Set hostel types
                         ArrayList<Hotel.HostelType> hostelTypes = new ArrayList<>();
                         hostelTypes.add((Hotel.HostelType) cmb_hostel1.getSelectedItem());
@@ -131,12 +138,10 @@ public class HotelView extends Layout {
                     }catch (ClassCastException exc){
                         exc.printStackTrace();
                     }
-*/
 
 /*
                     newHotel.setStrt_date(LocalDate.parse(fld_hotel_season_strt,DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 */
-/*
                     try {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         LocalDate highstartDate = LocalDate.parse(fld_hotel_high_season_strt.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -153,8 +158,8 @@ public class HotelView extends Layout {
                         exception.printStackTrace();
                         JOptionPane.showMessageDialog(null, "Lütfen Tarihleri doğru formatta giriniz (dd/MM/yyyy)");
                         return; // Tarih formatı hatası olduğunda işlemi sonlandırır
-                    }*/
-                    try {
+                    }
+                    /*try {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         String highSeasonStartStr = fld_hotel_high_season_strt.getText();
                         String highSeasonFinishStr = fld_hotel_high_season_fnsh.getText();
@@ -180,7 +185,7 @@ public class HotelView extends Layout {
                         exception.printStackTrace();
                         JOptionPane.showMessageDialog(null, "Lütfen tarihleri doğru formatta giriniz (dd/MM/yyyy)");
                         return;
-                    }
+                    }*/
 
 
 
@@ -206,7 +211,12 @@ public class HotelView extends Layout {
         MaskFormatter dateFormatter = new MaskFormatter("##/##/####");
         dateFormatter.setPlaceholderCharacter('_');
 
+
+
         fld_hotel_high_season_strt = new JTextField(String.valueOf(dateFormatter));
+
+
+
         //fld_hotel_high_season_strt.setText("10/10/2023");
 
         fld_hotel_high_season_fnsh = new JTextField(String.valueOf(dateFormatter));

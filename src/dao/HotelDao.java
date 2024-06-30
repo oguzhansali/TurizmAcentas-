@@ -63,8 +63,8 @@ public class HotelDao {
         newHotel.setLow_season_strt_date(LocalDate.parse(rs.getString("hotel_low_season_strt")));
         newHotel.setLow_season_fnsh_date(LocalDate.parse(rs.getString("hotel_low_season_fnsh")));
 
-        newHotel.setHostelTypes(Hotel.HostelType.valueOf(rs.getString("hotel_hostel_type")));
-        newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(rs.getString("hotel_facility_type")));
+        /*newHotel.setHostelTypes(Hotel.HostelType.valueOf(rs.getString("hotel_hostel_type")));
+        newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(rs.getString("hotel_facility_type")));*/
 
 
 
@@ -89,10 +89,10 @@ public class HotelDao {
         System.out.println(hostelTypeList);
 
         // Hostel tiplerini ArrayList olarak alabilmek için
-        *//*String[] hostelTypeStrings = rs.getString("hotel_hostel_type").split(",");
+        */String[] hostelTypeStrings = rs.getString("hotel_hostel_type").split(",");
         for (String type : hostelTypeStrings) {
             if (!type.isEmpty()) {
-                newHotel.addHostelType(Hotel.HostelType.valueOf(type.trim()));
+                newHotel.addHostelType(Hotel.HostelType.valueOf(type.trim().replace("[","").replace("]","")));
             }
         }
 
@@ -100,9 +100,9 @@ public class HotelDao {
         String[] facilityFeatureStrings = rs.getString("hotel_facility_type").split(",");
         for (String feature : facilityFeatureStrings) {
             if (!feature.isEmpty()) {
-                newHotel.addFacilityFeature(Hotel.FacilityFeature.valueOf(feature.trim()));
+                newHotel.addFacilityFeature(Hotel.FacilityFeature.valueOf(feature.trim().replace("[","").replace("]","")));
             }
-        }*/
+        }
 
 
 
@@ -217,15 +217,13 @@ public class HotelDao {
             pr.setDate(10, Date.valueOf(hotel.getLow_season_strt_date()));
             pr.setDate(11, Date.valueOf(hotel.getLow_season_fnsh_date()));
 
-            /*
-            // Hostel tiplerini virgülle ayırarak String olarak ekliyoruz
+            /*// Hostel tiplerini virgülle ayırarak String olarak ekliyoruz
             String hostelTypeString = String.join(",", hotel.getHostelTypeNames());
             pr.setString(8, hostelTypeString);
 
             // Facility feature'larını virgülle ayırarak String olarak ekliyoruz
             String facilityFeatureString = String.join(",",hotel.getFacilityFeatureNames());
-            pr.setString(9, facilityFeatureString);
-            */
+            pr.setString(9, facilityFeatureString);*/
 
             pr.setInt(10, hotel.getId());
 

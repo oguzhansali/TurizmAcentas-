@@ -51,6 +51,9 @@ public class Helper {
     public static boolean isFieldEmpty(JTextField field){
         return field.getText().trim().isEmpty();
     }
+    public static boolean isFieldEmpty(JFormattedTextField field){
+        return field.getText().trim().isEmpty();
+    }
 
     public static boolean isFieldListEmpty(JTextField[] fieldList){
         for (JTextField field:fieldList){
