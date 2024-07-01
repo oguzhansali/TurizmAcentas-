@@ -49,6 +49,7 @@ public class HotelDao {
         return obj;
     }
 
+
     //Kullanıcıdan alınan veriler Db ile eşleştirildi.
     public Hotel match (ResultSet rs) throws SQLException, ParseException {
         Hotel newHotel = new Hotel();
@@ -60,8 +61,8 @@ public class HotelDao {
         newHotel.setStar(rs.getString("hotel_star"));
         newHotel.setHigh_season_strt_date(LocalDate.parse(rs.getString("hotel_high_season_strt")));
         newHotel.setHigh_season_fnsh_date(LocalDate.parse(rs.getString("hotel_high_season_fnsh")));
-        newHotel.setLow_season_strt_date(LocalDate.parse(rs.getString("hotel_low_season_strt")));
-        newHotel.setLow_season_fnsh_date(LocalDate.parse(rs.getString("hotel_low_season_fnsh")));
+        newHotel.setHotel_open(LocalDate.parse(rs.getString("hotel_open")));
+        newHotel.setHotel_close(LocalDate.parse(rs.getString("hotel_close")));
 
 
         // Hostel tiplerini ArrayList olarak alabilmek için
@@ -83,7 +84,7 @@ public class HotelDao {
 
     public boolean save (Hotel hotel){
         String query = "INSERT INTO public.hotel " +
-                "(hotel_name, hotel_adress, hotel_mail, hotel_mpno, hotel_star, hotel_high_season_strt, hotel_high_season_fnsh, hotel_hostel_type, hotel_facility_type, hotel_low_season_strt, hotel_low_season_fnsh) " +
+                "(hotel_name, hotel_adress, hotel_mail, hotel_mpno, hotel_star, hotel_high_season_strt, hotel_high_season_fnsh, hotel_hostel_type, hotel_facility_type, hotel_open, hotel_close) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         try {
             PreparedStatement pr = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -109,14 +110,14 @@ public class HotelDao {
             pr.setString(8,hotel.getHostelType().toString());
             pr.setString(9,hotel.getFacilityFeature().toString());
 
-            if (hotel.getLow_season_strt_date() != null) {
-                pr.setDate(10, Date.valueOf(hotel.getLow_season_strt_date()));
+            if (hotel.getHotel_open() != null) {
+                pr.setDate(10, Date.valueOf(hotel.getHotel_open()));
             } else {
                 pr.setNull(10, Types.DATE);
             }
 
-            if (hotel.getLow_season_fnsh_date() != null) {
-                pr.setDate(11, Date.valueOf(hotel.getLow_season_fnsh_date()));
+            if (hotel.getHotel_close() != null) {
+                pr.setDate(11, Date.valueOf(hotel.getHotel_close()));
             } else {
                 pr.setNull(11, Types.DATE);
             }
@@ -147,8 +148,8 @@ public class HotelDao {
                 "hotel_high_season_fnsh = ?, " +
                 "hotel_hostel_type = ?, " +
                 "hotel_facility_type = ?, " +
-                "hotel_low_season_strt= ?,"+
-                "hotel_low_season_fnsh= ?"+
+                "hotel_open = ?,"+
+                "hotel_close = ?"+
                 "WHERE hotel_id = ?";
         try {
             PreparedStatement pr = con.prepareStatement(query);
@@ -163,8 +164,8 @@ public class HotelDao {
             pr.setString(8,hotel.getHostelType().toString());
             pr.setString(9,hotel.getFacilityFeature().toString());
 
-            pr.setDate(10, Date.valueOf(hotel.getLow_season_strt_date()));
-            pr.setDate(11, Date.valueOf(hotel.getLow_season_fnsh_date()));
+            pr.setDate(10, Date.valueOf(hotel.getHotel_open()));
+            pr.setDate(11, Date.valueOf(hotel.getHotel_close()));
 
             pr.setInt(12, hotel.getId());
 

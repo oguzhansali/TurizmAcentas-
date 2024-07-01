@@ -3,6 +3,7 @@ package view;
 import business.HotelManager;
 import business.RoomManager;
 import core.Helper;
+import dao.HotelDao;
 import entity.Hotel;
 import entity.Room;
 import core.ComboItem;
@@ -40,6 +41,8 @@ public class RoomView extends Layout {
     private HotelManager hotelManager;
     private RoomManager roomManager;
 
+
+
     public RoomView(Room room){
         this.room=room;
         this.hotelManager=new HotelManager();
@@ -47,15 +50,21 @@ public class RoomView extends Layout {
         this.add(container);
         this.guiInitilaze(600,600);
 
+
         for(Hotel hotel: this.hotelManager.findAll()){
-            this.cmb_hotel.addItem(new ComboItem(hotel.getId(),hotel.getName()) );
+            this.cmb_hotel.addItem(new ComboItem(hotel.getId(),hotel.getName()));
+
         }
+
+
         this.cmb_room_type.setModel(new DefaultComboBoxModel<>(Room.RoomType.values()));
         this.cmb_television.setModel(new DefaultComboBoxModel<>(Room.Television.values()));
         this.cmb_minibar.setModel(new DefaultComboBoxModel<>(Room.MiniBar.values()));
         this.cmb_game_console.setModel(new DefaultComboBoxModel<>(Room.GameConsole.values()));
         this.cmb_safe.setModel(new DefaultComboBoxModel<>(Room.Safe.values()));
         this.cmb_projection.setModel(new DefaultComboBoxModel<>(Room.Projection.values()));
+
+
 
         if (this.room.getId()!=0){
            this.fld_bed_count.setText(this.room.getBed_count());
@@ -69,8 +78,11 @@ public class RoomView extends Layout {
            this.cmb_projection.getModel().setSelectedItem(this.room.getProjection());
            ComboItem defaultRoom = new ComboItem(this.room.getHotel().getId(),this.room.getHotel().getName());
            this.cmb_hotel.getModel().setSelectedItem(defaultRoom);
-           this.fld_room_adult_price.getText();
-           this.fld_room_kid_price.getText();
+           this.fld_room_adult_price.setText(this.room.getAdult_price());
+           this.fld_room_kid_price.setText(this.room.getKid_price());
+
+
+
         }
 
         btn_save.addActionListener(e -> {
@@ -94,6 +106,7 @@ public class RoomView extends Layout {
                 this.room.setHotel_id(selectedHotel.getKey());
                 this.room.setAdult_price(fld_room_adult_price.getText());
                 this.room.setKid_price(fld_room_kid_price.getText());
+
 
                 if (this.room.getId()!=0){
                     result=this.roomManager.update(this.room);

@@ -68,54 +68,44 @@ public class RoomManager {
     public ArrayList<Room> getByListHotelId(int hotelId){
         return this.roomDao.getByListHotelId(hotelId);
     }
-    public ArrayList<Room> searchForTable(int hotelId, String hotelName, String address, Date room_strt, Date room_fnsh){
-        String select = "SELECT * FROM public.room r";
-        String join = " JOIN public.hotel h ON r.room_hotel_id = h.hotel_id";
+    public ArrayList<Room> searchForTable(int hotelId, String hotelName, String address, String strt_date, String fnsh_date){
+        String query = "SELECT * FROM public.room AS r LEFT JOIN public.hotel AS h ON r.room_hotel_id = h.hotel_id";
 
-        ArrayList<String> whereList=new ArrayList<>();
+        ArrayList<String> where = new ArrayList<>();
 
-        if (hotelId!=0){
-            whereList.add("room_hotel_id = " + hotelId);
+        if (hotelId != 0) {
+            where.add("r.room_hotel_id = " + hotelId);
         }
         if (hotelName != null && !hotelName.isEmpty()) {
-            whereList.add("h.hotel_name ILIKE '%" + hotelName + "%'");
+            where.add("h.hotel_name ILIKE '%" + hotelName + "%'");
         }
         if (address != null && !address.isEmpty()) {
-            whereList.add("h.hotel_adress ILIKE '%" + address + "%'");
-        }
-        if (room_strt != null && room_fnsh != null) {
-            String roomStrtStr=room_strt.toString();
-            String room_FnshStr= room_fnsh.toString();
-
-
-            // Add a condition to filter by year if necessary
-            whereList.add("EXTRACT(YEAR FROM '" + room_strt + "') = EXTRACT(YEAR FROM current_date)"); // Example for current year
-            whereList.add("('" + room_strt + "' BETWEEN h.hotel_high_season_strt AND h.hotel_high_season_fnsh " +
-                    "OR '" + room_fnsh + "' BETWEEN h.hotel_high_season_strt AND h.hotel_high_season_fnsh " +
-                    "OR '" + room_strt + "' BETWEEN h.hotel_low_season_strt AND h.hotel_low_season_fnsh " +
-                    "OR '" + room_fnsh + "' BETWEEN h.hotel_low_season_strt AND h.hotel_low_season_fnsh " +
-                    "OR (h.hotel_high_season_strt BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
-                    "OR (h.hotel_high_season_fnsh BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
-                    "OR (h.hotel_low_season_strt BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
-                    "OR (h.hotel_low_season_fnsh BETWEEN '" + room_strt + "' AND '" + room_fnsh + "'))");
-
-            /*whereList.add("('" + room_strt + "' BETWEEN h.hotel_high_season_strt AND h.hotel_high_season_fnsh " +
-                    "OR '" + room_fnsh + "' BETWEEN h.hotel_high_season_strt AND h.hotel_high_season_fnsh " +
-                    "OR '" + room_strt + "' BETWEEN h.hotel_low_season_strt AND h.hotel_low_season_fnsh " +
-                    "OR '" + room_fnsh + "' BETWEEN h.hotel_low_season_strt AND h.hotel_low_season_fnsh " +
-                    "OR (h.hotel_high_season_strt BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
-                    "OR (h.hotel_high_season_fnsh BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
-                    "OR (h.hotel_low_season_strt BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
-                    "OR (h.hotel_low_season_fnsh BETWEEN '" + room_strt + "' AND '" + room_fnsh + "'))");*/
+            where.add("h.hotel_adress ILIKE '%" + address + "%'");
         }
 
-        String whereStr = String.join(" AND ", whereList);
-        String query = select + join;
-        if (whereStr.length()>0){
-            query+=" WHERE " + whereStr;
+        // Check if the given dates fall between hotel_open and hotel_close dates
+        if (strt_date != null && !strt_date.isEmpty()) {
+            where.add("'" + strt_date + "' BETWEEN h.hotel_open AND h.hotel_close");
         }
-        return  this.roomDao.selectByQuery(query);
+        if (fnsh_date != null && !fnsh_date.isEmpty()) {
+            where.add("'" + fnsh_date + "' BETWEEN h.hotel_open AND h.hotel_close");
+        }
+
+        String whereStr = String.join(" AND ", where);
+
+        if (!whereStr.isEmpty()) {
+            query += " WHERE " + whereStr;
+        }
+
+        ArrayList<Room> searchedRoomList = this.roomDao.selectByQuery(query);
+
+        return searchedRoomList;
     }
+
+
+
+
+
     public ArrayList<Room> searchForBooking(String strt_date, String fnsh_date, Room.RoomType roomType, Room.Television television, Room.MiniBar miniBar, Room.GameConsole gameConsole, Room.Safe safe, Room.Projection projection) {
         String query = "SELECT * FROM public.room as r LEFT JOIN public.hotel as h";
 

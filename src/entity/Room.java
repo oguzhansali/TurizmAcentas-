@@ -16,6 +16,7 @@ public class Room {
     private String adult_price;
     private String kid_price;
 
+
     public Room() {
 
     }
@@ -62,7 +63,9 @@ public class Room {
         this.projection = projection;
         this.adult_price=adult_price;
         this.kid_price=kid_price;
+
     }
+
 
     public int getId() {
         return id;

@@ -178,10 +178,10 @@
           <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Düşük Sezon Başlanıç"/>
+          <text value="Otel Açılış Tarihi"/>
         </properties>
       </component>
-      <component id="cb49" class="javax.swing.JTextField" binding="fld_hotel_low_season_strt">
+      <component id="cb49" class="javax.swing.JTextField" binding="fld_hotel_open">
         <constraints>
           <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -194,10 +194,10 @@
           <grid row="13" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Düşük Sezon Bitiş"/>
+          <text value="Otel Kapanış Tarihi"/>
         </properties>
       </component>
-      <component id="7d031" class="javax.swing.JTextField" binding="fld_hotel_low_season_fnsh">
+      <component id="7d031" class="javax.swing.JTextField" binding="fld_hotel_close">
         <constraints>
           <grid row="14" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>

@@ -12,11 +12,7 @@ public class Book {
     private String mpno;
     private LocalDate strt_date;
     private LocalDate fnsh_date;
-    private int dailyPrice;
-    private int totalPrice;
     private String bCase;
-    private String adultCount;
-    private String kidCount;
 
 
     public Book() {
@@ -95,22 +91,6 @@ public class Book {
         this.fnsh_date = fnsh_date;
     }
 
-    public int getDailyPrice() {
-        return dailyPrice;
-    }
-
-    public void setDailyPrice(int dailyPrice) {
-        this.dailyPrice = dailyPrice;
-    }
-
-    public int getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
     public String getbCase() {
         return bCase;
     }
@@ -119,21 +99,6 @@ public class Book {
         this.bCase = bCase;
     }
 
-    public String getAdultCount() {
-        return adultCount;
-    }
-
-    public void setAdultCount(String adultCount) {
-        this.adultCount = adultCount;
-    }
-
-    public String getKidCount() {
-        return kidCount;
-    }
-
-    public void setKidCount(String kidCount) {
-        this.kidCount = kidCount;
-    }
 
     @Override
     public String toString() {
@@ -147,8 +112,6 @@ public class Book {
                 ", mpno='" + mpno + '\'' +
                 ", strt_date=" + strt_date +
                 ", fnsh_date=" + fnsh_date +
-                ", dailyPrice='" + dailyPrice + '\'' +
-                ", totalPrice='" + totalPrice + '\'' +
                 '}';
     }
 }

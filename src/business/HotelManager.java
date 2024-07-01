@@ -18,6 +18,8 @@ public class HotelManager {
     public Hotel getById(int id){
         return this.hotelDao.getById(id);
     }
+
+
     public ArrayList<Hotel> findAll(){
         return this.hotelDao.findAll();
     }
@@ -37,8 +39,8 @@ public class HotelManager {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             rowObject[i++] = obj.getHigh_season_strt_date();
             rowObject[i++] = obj.getHigh_season_fnsh_date();
-            rowObject[i++] = obj.getLow_season_strt_date();
-            rowObject[i++] = obj.getLow_season_fnsh_date();
+            rowObject[i++] = obj.getHotel_open();
+            rowObject[i++] = obj.getHotel_close();
             rowObject[i++] = obj.getFacilityFeature();
             rowObject[i++] = obj.getHostelType();
             hotelObjList.add(rowObject);
@@ -72,17 +74,6 @@ public class HotelManager {
 
     public boolean add(Hotel hotel) {
         return this.save(hotel);
-    }
-
-
-    public List<String> getAllHotelNames() {
-        try {
-            return hotelDao.getAllHotelNames();
-        } catch (SQLException e) {
-            // Hata yönetimi burada yapılabilir
-            e.printStackTrace();
-            return null;
-        }
     }
 
 

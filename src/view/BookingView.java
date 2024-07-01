@@ -21,8 +21,6 @@ public class BookingView extends Layout {
     private JTextField fld_booking_mpno;
     private JTextField fld_booking_strt_date;
     private JTextField fld_booking_fnsh_date;
-    private JTextField fld_booking_adult_count;
-    private JTextField fld_booking_kid_count;
     private JButton btn_booking_save;
     private BookManager bookManager;
     private Room room;
@@ -51,8 +49,6 @@ public class BookingView extends Layout {
                     this.fld_booking_mpno,
                     this.fld_booking_strt_date,
                     this.fld_booking_fnsh_date,
-                    this.fld_booking_adult_count,
-                    this.fld_booking_kid_count
             };
             if (Helper.isFieldListEmpty(checkFieldList)){
                 Helper.showMsg("fill");
@@ -66,8 +62,6 @@ public class BookingView extends Layout {
                 book.setFnsh_date(LocalDate.parse(fnsh_date,DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 book.setIdentityNum(this.fld_booking_identity_num.getText());
                 book.setMpno(this.fld_booking_mpno.getText());
-                book.setAdultCount(this.fld_booking_adult_count.getText());
-                book.setKidCount(this.fld_booking_kid_count.getText());
 
                 if (this.bookManager.save(book)){
                     Helper.showMsg("done");

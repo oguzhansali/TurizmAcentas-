@@ -13,4 +13,11 @@ public class BookManager {
         return this.bookDao.save(book);
     }
 
+    public boolean update(Book book){
+        return this.bookDao.update(book);
+    }
+    public boolean delete(int id){
+        return this.bookDao.delete(id);
+    }
+
 }

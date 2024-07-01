@@ -184,7 +184,10 @@ public class EmployeeView extends Layout {
 
     //Otel verilerinin geleceği tablo oluşturuldu.
     public void loadHotelTable() {
-        Object[] col_hotel = {"Otel ID", "Otel Adı", "Otel Adresi", "Otel Maili", "Telefon Numarası", "Yıldız", " Yüksek Sezon Başlangıç", " Yüksek Sezon Bitiş", "Alçak Sezon Başlangıç", "Alcaçk Sezon Bitiş", "Tesis Özelliği", "Pansiyon Türü"};
+        Object[] col_hotel = {"Otel ID", "Otel Adı", "Otel Adresi",
+                "Otel Maili", "Telefon Numarası", "Yıldız", " Yüksek Sezon Başlangıç",
+                "Yüksek Sezon Bitiş", "Otel Açılış Tarihi",
+                "Otel Kapanış Tarihi", "Tesis Özelliği","Pansiyon Tipi"};
         ArrayList<Object[]> hotelList = this.hotelManager.getForTable(col_hotel.length);
         this.createTable(this.tmdl_hotel, this.tbl_hotel, col_hotel, hotelList);
         // Tesis özellikleri ve pansiyon türlerini JComboBox'lardan alıp hotelList'e ekleyin
@@ -238,21 +241,20 @@ public class EmployeeView extends Layout {
 
     //Static tanımlanmış col_room ile room tablosu oluşturuldu.
     public void loadRoomTable() {
-        Object[] col_room = {"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon", "Gecelik Yetişkin Ücret", "Gecelik Çocuk Ücret"};
+        Object[] col_room = {"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu",
+                "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu",
+                "Kasa", "Projeksiyon", "Gecelik Yetişkin Ücret", "Gecelik Çocuk Ücret"};
         ArrayList<Object[]> roomList = this.roomManager.getForTable(col_room.length, this.roomManager.findAll());
         this.createTable(this.tmdl_room, this.tbl_room, col_room, roomList);
     }
 
     //Oda arama işleminde verileri filtrelendiğinde oluşturulacak tablo.
     public void loadRoomTable(ArrayList<Object[]> roomRowListBySearch) {
-       /* Object[] col_room = {"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon", "Gecelik Yetişkin Ücret", "Gecelik Çocuk Ücret"};
-        ArrayList<Object[]> roomList = roomRowListBySearch;
-        this.createTable(this.tmdl_room, this.tbl_room, col_room, roomList);*/
         this.col_room = new Object[]{"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon", "Gecelik Yetişkin Ücret", "Gecelik Çocuk Ücret"};
-        if (roomRowListBySearch == null){
-            roomRowListBySearch= this.roomManager.getForTable(this.col_room.length,this.roomManager.findAll());
+        if (roomRowListBySearch == null) {
+            roomRowListBySearch = this.roomManager.getForTable(this.col_room.length, this.roomManager.findAll());
         }
-        createTable(this.tmdl_room,this.tbl_room,col_room,roomRowListBySearch);
+        createTable(this.tmdl_room, this.tbl_room, col_room, roomRowListBySearch);
     }
 
     //ComboBoxları setleme işlemi ve sıfırlama işlemi yapıldı.
@@ -264,16 +266,18 @@ public class EmployeeView extends Layout {
         loadRoomFilterHotel();
         loadRoomFilterCity();
     }
-    public void loadRoomFilterHotel(){
+
+    public void loadRoomFilterHotel() {
         this.cmb_rooms_hotel.removeAllItems();
-        for (Hotel obj : hotelManager.findAll()){
+        for (Hotel obj : hotelManager.findAll()) {
             this.cmb_rooms_hotel.addItem(new ComboItem(obj.getId(), obj.getName()));
         }
         this.cmb_rooms_hotel.setSelectedItem(null);
     }
-    public void loadRoomFilterCity(){
+
+    public void loadRoomFilterCity() {
         this.cmb_room_city.removeAllItems();
-        for (Hotel obj : hotelManager.findAll()){
+        for (Hotel obj : hotelManager.findAll()) {
             this.cmb_room_city.addItem(new ComboItem(obj.getId(), obj.getAdress()));
         }
         this.cmb_room_city.setSelectedItem(null);
@@ -321,7 +325,7 @@ public class EmployeeView extends Layout {
         btn_search_room.addActionListener(e -> {
             ComboItem selectedHotel = (ComboItem) this.cmb_rooms_hotel.getSelectedItem();
             int hotelId = 0;
-            String hotelName =null;
+            String hotelName = null;
             String address = null;
 
             if (selectedHotel != null) {
@@ -329,65 +333,31 @@ public class EmployeeView extends Layout {
                 hotelName = selectedHotel.toString(); // Assuming ComboItem has a meaningful toString() method
             }
 
-            /*Object selectedCity = this.cmb_room_city.getSelectedItem();
-            if (selectedCity != null) {
-                String selectedCityStr = selectedCity.toString();
-
-                // Check if the selected city already exists in the combo box
-                boolean cityExists = false;
-                for (int i = 0; i < this.cmb_room_city.getItemCount(); i++) {
-                    if (selectedCityStr.equals(this.cmb_room_city.getItemAt(i).toString())) {
-                        cityExists = true;
-                        break;
-                    }
-                }
-
-                // If the city does not exist in the combo box, add it
-                if (!cityExists) {
-                    this.cmb_room_city.addItem(selectedCityStr);
-                }
-
-                // Set the address to the selected city
-                address = selectedCityStr;
-            }*/
             // Bu kısım, sınıfın üstünde tanımlı olabilir veya sınıfın alanı olarak tanımlanabilir.
             Set<String> addedCities = new HashSet<>();
 
-// Ekleme işlemi sırasında şehir ekleme ve adres atama kısmı
+            // Ekleme işlemi sırasında şehir ekleme ve adres atama kısmı
             Object selectedCity = this.cmb_room_city.getSelectedItem();
             if (selectedCity != null) {
                 String selectedCityStr = selectedCity.toString();
-
-                // Eğer şehir daha önce eklenmediyse
-                if (!addedCities.contains(selectedCityStr)) {
-                    // Şehri Set'e ekleyin ve ComboBox'a ekleyin
-                    addedCities.add(selectedCityStr);
-                    this.cmb_room_city.addItem(selectedCityStr);
-                }
-
                 // Adresi seçilen şehire atayın
                 address = selectedCityStr;
             }
 
-
-            java.sql.Date room_strt = null;
-            java.sql.Date room_fnsh = null;
-
-
+            String room_strt = null;
+            String room_fnsh = null;
             try {
                 if (!this.fld_room_strt.getText().isEmpty()) {
                     LocalDate startDate = LocalDate.parse(this.fld_room_strt.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    room_strt = java.sql.Date.valueOf(startDate);
+                    room_strt = String.valueOf(startDate);
                 }
 
-                if (!this.fld_fnsh_date.getText().isEmpty()) {
-                    LocalDate endDate = LocalDate.parse(this.fld_fnsh_date.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    room_fnsh = java.sql.Date.valueOf(endDate);
+                if (!this.fld_room_fnsh.getText().isEmpty()) {
+                    LocalDate endDate = LocalDate.parse(this.fld_room_fnsh.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    room_fnsh = String.valueOf(endDate);
                 }
             } catch (DateTimeParseException ex) {
                 ex.printStackTrace();
-                // Handle or log the exception as needed
-                // You can provide feedback to the user about the incorrect date format
             }
 
 
@@ -417,8 +387,8 @@ public class EmployeeView extends Layout {
 
     }
 
-    private void loadBookingTable(ArrayList<Object[]> roomList) {
-        Object[] col_booking_List = {"ID", "Oda ID", "Müşteri Adı", "Müşteri Soyadı", "TC. NO.", "Telefon No.", "Başlangıç Tarihi", "Bitiş Tarihi", "Oda günlük Ücret", "Rezervasyon Toplam Tutar"};
+    public void loadBookingTable(ArrayList<Object[]> roomList) {
+        Object[] col_booking_List = {"ID", "Oda ID", "Müşteri Adı", "Müşteri Soyadı", "TC. NO.", "Telefon No.", "Başlangıç Tarihi", "Bitiş Tarihi"};
         createTable(this.tmdl_booking, this.tbl_booking, col_booking_List, roomList);
     }
 
