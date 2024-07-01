@@ -17,13 +17,9 @@ import view.RoomView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
 import java.awt.event.*;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class EmployeeView extends Layout {
     private JPanel container;
@@ -45,7 +41,7 @@ public class EmployeeView extends Layout {
     private JButton btn_cancel_room;
     private JButton btn_search_room;
     private JTextField fld_room_bed_count;
-    private JComboBox<String> cmb_rooms_hotel;
+    private JComboBox<ComboItem> cmb_rooms_hotel;
     private JPanel pnl_booking;
     private JTable tbl_booking;
     private JScrollPane scrl_booking;
@@ -59,12 +55,15 @@ public class EmployeeView extends Layout {
     private JComboBox<Room.Projection> cmb_booking_room_projection;
     private JButton btn_booking_search;
     private JButton btn_cncl_booking;
+    private JFormattedTextField fld_room_fnsh;
+    private JFormattedTextField fld_room_strt;
+    private JComboBox cmb_room_city;
     private UserManager userManager;
     private Hotel hotel;
     private HotelManager hotelManager;
     private DefaultTableModel tmdl_hotel = new DefaultTableModel();
     private DefaultTableModel tmdl_room = new DefaultTableModel();
-    private DefaultTableModel tmdl_booking=new DefaultTableModel();
+    private DefaultTableModel tmdl_booking = new DefaultTableModel();
     private JPopupMenu hotel_menu;
     private JPopupMenu room_menu;
     private JPopupMenu booking_menu;
@@ -74,13 +73,13 @@ public class EmployeeView extends Layout {
     private BookManager bookManager;
     private RoomManager roomManager;
     private Object[] col_hotel;
-    private Object [] col_room;
+    private Object[] col_room;
 
     public EmployeeView(User user) {
         this.userManager = new UserManager();
         this.hotelManager = new HotelManager();
         this.roomManager = new RoomManager();
-        this.bookManager=new BookManager();
+        this.bookManager = new BookManager();
 
         this.add(container);
         this.guiInitilaze(1500, 1000);
@@ -91,7 +90,7 @@ public class EmployeeView extends Layout {
         }
         this.lbl_welcome.setText("Hoşgeldiniz : " + this.user.getUsername());//Kullanıcı girişinde arayüzde giirş yapan kullanıcı bilgisi gözlemlenecek.
 
-        this.col_room = new Object[] {"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon","Gecelik Yetişkin Ücret","Gecelik Çocuk Ücret"};
+        this.col_room = new Object[]{"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon", "Gecelik Yetişkin Ücret", "Gecelik Çocuk Ücret"};
 
 
         //Hotel Tab Menu.
@@ -177,12 +176,11 @@ public class EmployeeView extends Layout {
         this.scrl_booking.setComponentPopupMenu(booking_menu);
 
 
-
     }
 
     //Otel verilerinin geleceği tablo oluşturuldu.
     public void loadHotelTable() {
-        Object[] col_hotel = {"Otel ID", "Otel Adı", "Otel Adresi", "Otel Maili", "Telefon Numarası", "Yıldız", " Yüksek Sezon Başlangıç", " Yüksek Sezon Bitiş","Alçak Sezon Başlangıç","Alcaçk Sezon Bitiş" ,"Tesis Özelliği", "Pansiyon Türü"};
+        Object[] col_hotel = {"Otel ID", "Otel Adı", "Otel Adresi", "Otel Maili", "Telefon Numarası", "Yıldız", " Yüksek Sezon Başlangıç", " Yüksek Sezon Bitiş", "Alçak Sezon Başlangıç", "Alcaçk Sezon Bitiş", "Tesis Özelliği", "Pansiyon Türü"};
         ArrayList<Object[]> hotelList = this.hotelManager.getForTable(col_hotel.length);
         this.createTable(this.tmdl_hotel, this.tbl_hotel, col_hotel, hotelList);
         // Tesis özellikleri ve pansiyon türlerini JComboBox'lardan alıp hotelList'e ekleyin
@@ -233,46 +231,48 @@ public class EmployeeView extends Layout {
             }
         });
     }
+
     //Static tanımlanmış col_room ile room tablosu oluşturuldu.
     public void loadRoomTable() {
-        Object[] col_room = {"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon","Gecelik Yetişkin Ücret","Gecelik Çocuk Ücret"};
+        Object[] col_room = {"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon", "Gecelik Yetişkin Ücret", "Gecelik Çocuk Ücret"};
         ArrayList<Object[]> roomList = this.roomManager.getForTable(col_room.length, this.roomManager.findAll());
         this.createTable(this.tmdl_room, this.tbl_room, col_room, roomList);
     }
 
     //Oda arama işleminde verileri filtrelendiğinde oluşturulacak tablo.
     public void loadRoomTable(ArrayList<Object[]> roomRowListBySearch) {
-        Object[] col_room = {"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon","Gecelik Yetişkin Ücret","Gecelik Çocuk Ücret"};
+       /* Object[] col_room = {"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon", "Gecelik Yetişkin Ücret", "Gecelik Çocuk Ücret"};
         ArrayList<Object[]> roomList = roomRowListBySearch;
-        this.createTable(this.tmdl_room, this.tbl_room, col_room, roomList);
+        this.createTable(this.tmdl_room, this.tbl_room, col_room, roomList);*/
+        this.col_room = new Object[]{"Oda ID", "Otel Name", "Yatak Sayısı", "Oda Boyutu", "Oda Adet", "Oda Tipi", "Televizyon", "Mini Bar", "Oyun Konsolu", "Kasa", "Projeksiyon", "Gecelik Yetişkin Ücret", "Gecelik Çocuk Ücret"};
+        if (roomRowListBySearch == null){
+            roomRowListBySearch= this.roomManager.getForTable(this.col_room.length,this.roomManager.findAll());
+        }
+        createTable(this.tmdl_room,this.tbl_room,col_room,roomRowListBySearch);
     }
 
     //ComboBoxları setleme işlemi ve sıfırlama işlemi yapıldı.
-    public void loadRoomFilter(){
-        List<String> hotelNames = this.hotelManager.getAllHotelNames();
-        if (hotelNames != null && !hotelNames.isEmpty()) {
-            this.cmb_rooms_hotel.setModel(new DefaultComboBoxModel<>(hotelNames.toArray(new String[0])));
-            this.cmb_rooms_hotel.setSelectedItem(null);
-        } else {
-            // Otel adları boş veya null ise JComboBox'ı boşaltabilir veya bir mesaj gösterebilirsiniz.
-            this.cmb_rooms_hotel.setModel(new DefaultComboBoxModel<>());
-            this.cmb_rooms_hotel.setSelectedItem(null);
-        }
-
+    public void loadRoomFilter() {
         // Diğer ComboBox'lar için standart yükleme işlemlerini gerçekleştirin
-        this.cmb_room_television.setModel(new DefaultComboBoxModel<>(Room.Television.values()));
-        this.cmb_room_television.setSelectedItem(null);
-        this.cmb_room_roomtype.setModel(new DefaultComboBoxModel<>(Room.RoomType.values()));
-        this.cmb_room_roomtype.setSelectedItem(null);
-        this.cmb_room_minibar.setModel(new DefaultComboBoxModel<>(Room.MiniBar.values()));
-        this.cmb_room_minibar.setSelectedItem(null);
-        this.cmb_room_gameconsole.setModel(new DefaultComboBoxModel<>(Room.GameConsole.values()));
-        this.cmb_room_gameconsole.setSelectedItem(null);
-        this.cmb_room_safe.setModel(new DefaultComboBoxModel<>(Room.Safe.values()));
-        this.cmb_room_safe.setSelectedItem(null);
-        this.cmb_room_projection.setModel(new DefaultComboBoxModel<>(Room.Projection.values()));
-        this.cmb_room_projection.setSelectedItem(null);
-        this.fld_room_bed_count.setText("");
+        this.cmb_room_city.setModel(new DefaultComboBoxModel());
+        this.fld_room_strt.getText();
+        this.fld_room_fnsh.getText();
+        loadRoomFilterHotel();
+        loadRoomFilterCity();
+    }
+    public void loadRoomFilterHotel(){
+        this.cmb_rooms_hotel.removeAllItems();
+        for (Hotel obj : hotelManager.findAll()){
+            this.cmb_rooms_hotel.addItem(new ComboItem(obj.getId(), obj.getName()));
+        }
+        this.cmb_rooms_hotel.setSelectedItem(null);
+    }
+    public void loadRoomFilterCity(){
+        this.cmb_room_city.removeAllItems();
+        for (Hotel obj : hotelManager.findAll()){
+            this.cmb_room_city.addItem(new ComboItem(obj.getId(), obj.getAdress()));
+        }
+        this.cmb_room_city.setSelectedItem(null);
     }
 
     public void loadRoomCompanent() {
@@ -343,17 +343,21 @@ public class EmployeeView extends Layout {
             loadRoomTable(roomRowListBySearch);
         });
         btn_cancel_room.addActionListener(e -> {
-            loadRoomFilter();
+            this.cmb_room_city.setSelectedItem(null);
+            this.cmb_rooms_hotel.setSelectedItem(null);
+            loadRoomTable(null);
+
         });
 
 
     }
 
     private void loadBookingTable(ArrayList<Object[]> roomList) {
-        Object[] col_booking_List = {"ID","Oda ID","Müşteri Adı","Müşteri Soyadı","TC. NO.","Telefon No.","Başlangıç Tarihi","Bitiş Tarihi","Oda günlük Ücret","Rezervasyon Toplam Tutar"};
-        createTable(this.tmdl_booking,this.tbl_booking,col_booking_List,roomList);
+        Object[] col_booking_List = {"ID", "Oda ID", "Müşteri Adı", "Müşteri Soyadı", "TC. NO.", "Telefon No.", "Başlangıç Tarihi", "Bitiş Tarihi", "Oda günlük Ücret", "Rezervasyon Toplam Tutar"};
+        createTable(this.tmdl_booking, this.tbl_booking, col_booking_List, roomList);
     }
-    public void  loadBookingFilter(){
+
+    public void loadBookingFilter() {
         this.cmb_booking_room_type.setModel(new DefaultComboBoxModel<>(Room.RoomType.values()));
         this.cmb_booking_room_type.setSelectedItem(null);
         this.cmb_booking_room_tv.setModel(new DefaultComboBoxModel<>(Room.Television.values()));
@@ -368,11 +372,11 @@ public class EmployeeView extends Layout {
         this.cmb_booking_room_projection.setSelectedItem(null);
     }
 
-    private void loadBookingComponent(){
+    private void loadBookingComponent() {
         tableRowSelected(this.tbl_booking);
-        this.booking_menu=new JPopupMenu();
+        this.booking_menu = new JPopupMenu();
         this.booking_menu.add("Rezervasyon Yap").addActionListener(e -> {
-            int selectRoomId=this.getTableSelectedRow(this.tbl_booking,0);
+            int selectRoomId = this.getTableSelectedRow(this.tbl_booking, 0);
             BookingView bookingView = new BookingView(
                     this.roomManager.getById(selectRoomId),
                     this.fld_strt_date.getText(),
@@ -394,11 +398,11 @@ public class EmployeeView extends Layout {
                     (Room.RoomType) cmb_booking_room_type.getSelectedItem(),
                     (Room.Television) cmb_booking_room_tv.getSelectedItem(),
                     (Room.MiniBar) cmb_booking_room_minibar.getSelectedItem(),
-                    (Room.GameConsole)cmb_booking_room_gameconsole.getSelectedItem(),
-                    (Room.Safe)cmb_booking_room_safe.getSelectedItem(),
-                    (Room.Projection)cmb_booking_room_projection.getSelectedItem()
+                    (Room.GameConsole) cmb_booking_room_gameconsole.getSelectedItem(),
+                    (Room.Safe) cmb_booking_room_safe.getSelectedItem(),
+                    (Room.Projection) cmb_booking_room_projection.getSelectedItem()
             );
-            ArrayList<Object[]> roomBookingRow= this.roomManager.getForTable(this.col_room.length,roomList);
+            ArrayList<Object[]> roomBookingRow = this.roomManager.getForTable(this.col_room.length, roomList);
             loadBookingTable(roomBookingRow);
 
         });
@@ -408,12 +412,6 @@ public class EmployeeView extends Layout {
         });
 
     }
-
-
-
-
-
-
 
 
 }
