@@ -63,39 +63,14 @@ public class HotelDao {
         newHotel.setLow_season_strt_date(LocalDate.parse(rs.getString("hotel_low_season_strt")));
         newHotel.setLow_season_fnsh_date(LocalDate.parse(rs.getString("hotel_low_season_fnsh")));
 
-        /*newHotel.setHostelTypes(Hotel.HostelType.valueOf(rs.getString("hotel_hostel_type")));
-        newHotel.setFacilityFeatures(Hotel.FacilityFeature.valueOf(rs.getString("hotel_facility_type")));*/
-
-
-
-
-        /*String hostelTypeStr = rs.getString("hotel_hostel_type");
-        String[] strHostelType = hostelTypeStr.split(",");
-
-        List<Hotel.HostelType> hostelTypeList = new ArrayList<>();
-        for (String type : strHostelType) {
-            *//*newHotel.setHostelTypes();*//*
-
-            //hostelTypeList.add((Hotel.HostelType.valueOf(type.trim())));
-
-            *//*try {
-                Hotel.HostelType hostelType = Hotel.HostelType.valueOf(type.trim().toUpperCase());
-                hostelTypeList.add(hostelType);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Geçersiz hostel tipi: " + type);
-            }*//*
-
-        }
-        System.out.println(hostelTypeList);
 
         // Hostel tiplerini ArrayList olarak alabilmek için
-        */String[] hostelTypeStrings = rs.getString("hotel_hostel_type").split(",");
+        String[] hostelTypeStrings = rs.getString("hotel_hostel_type").split(",");
         for (String type : hostelTypeStrings) {
             if (!type.isEmpty()) {
                 newHotel.addHostelType(Hotel.HostelType.valueOf(type.trim().replace("[","").replace("]","")));
             }
         }
-
         // Facility feature'larını ArrayList olarak alabilmek için
         String[] facilityFeatureStrings = rs.getString("hotel_facility_type").split(",");
         for (String feature : facilityFeatureStrings) {
@@ -103,13 +78,8 @@ public class HotelDao {
                 newHotel.addFacilityFeature(Hotel.FacilityFeature.valueOf(feature.trim().replace("[","").replace("]","")));
             }
         }
-
-
-
         return newHotel;
     }
-
-
 
     public boolean save (Hotel hotel){
         String query = "INSERT INTO public.hotel " +
@@ -122,9 +92,6 @@ public class HotelDao {
             pr.setString(3, hotel.getMail());
             pr.setString(4, hotel.getMpno());
             pr.setString(5, hotel.getStar().toString());
-
-            /*pr.setDate(6, Date.valueOf(hotel.getHigh_season_strt_date()));
-            pr.setDate(7, Date.valueOf(hotel.getHigh_season_fnsh_date()));*/
 
             // Tarihlerin null olup olmadığını kontrol et
             if (hotel.getHigh_season_strt_date() != null) {
@@ -142,10 +109,6 @@ public class HotelDao {
             pr.setString(8,hotel.getHostelType().toString());
             pr.setString(9,hotel.getFacilityFeature().toString());
 
-           /* pr.setDate(10, Date.valueOf(hotel.getLow_season_strt_date()));
-            pr.setDate(11, Date.valueOf(hotel.getLow_season_fnsh_date()));*/
-
-
             if (hotel.getLow_season_strt_date() != null) {
                 pr.setDate(10, Date.valueOf(hotel.getLow_season_strt_date()));
             } else {
@@ -157,20 +120,6 @@ public class HotelDao {
             } else {
                 pr.setNull(11, Types.DATE);
             }
-
-
-            /*// Hostel tiplerini virgülle ayırarak String olarak ekliyoruz
-            String hostelTypeString = String.join(",", hotel.getHostelType().toString());
-            pr.setString(8, hostelTypeString);
-
-            // Facility feature'larını virgülle ayırarak String olarak ekliyoruz
-            String facilityFeatureString = String.join(",", hotel.getFacilityFeature().toString());
-            pr.setString(9, facilityFeatureString);*/
-
-
-
-
-
 
             int rowCount = pr.executeUpdate();
             if (rowCount > 0) {
@@ -217,15 +166,7 @@ public class HotelDao {
             pr.setDate(10, Date.valueOf(hotel.getLow_season_strt_date()));
             pr.setDate(11, Date.valueOf(hotel.getLow_season_fnsh_date()));
 
-            /*// Hostel tiplerini virgülle ayırarak String olarak ekliyoruz
-            String hostelTypeString = String.join(",", hotel.getHostelTypeNames());
-            pr.setString(8, hostelTypeString);
-
-            // Facility feature'larını virgülle ayırarak String olarak ekliyoruz
-            String facilityFeatureString = String.join(",",hotel.getFacilityFeatureNames());
-            pr.setString(9, facilityFeatureString);*/
-
-            pr.setInt(10, hotel.getId());
+            pr.setInt(12, hotel.getId());
 
             return pr.executeUpdate() > 0;
         } catch (SQLException throwables) {
@@ -244,9 +185,11 @@ public class HotelDao {
         }
         return true;
     }
+
+    // hotel tablosundan otel adlarını alacak sorgu
     public List<String> getAllHotelNames() throws SQLException {
         List<String> hotelNames = new ArrayList<>();
-        String query = "SELECT hotel_name FROM public.hotel"; // hotel tablosundan otel adlarını alacak sorgu
+        String query = "SELECT hotel_name FROM public.hotel";
 
         try (PreparedStatement stmt = con.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {

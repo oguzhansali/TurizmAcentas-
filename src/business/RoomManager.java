@@ -4,11 +4,13 @@ import core.Helper;
 import dao.BookDao;
 import dao.RoomDao;
 import entity.Book;
+import entity.Hotel;
 import entity.Room;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class RoomManager {
     private final RoomDao roomDao = new RoomDao();
@@ -66,33 +68,49 @@ public class RoomManager {
     public ArrayList<Room> getByListHotelId(int hotelId){
         return this.roomDao.getByListHotelId(hotelId);
     }
-    public ArrayList<Room> searchForTable(int hotelId, Room.RoomType roomType, Room.Television television, Room.MiniBar miniBar, Room.GameConsole gameConsole, Room.Safe safe, Room.Projection projection, String text){
-        String select = "SELECT * FROM public.room";
+    public ArrayList<Room> searchForTable(int hotelId, String hotelName, String address, Date room_strt, Date room_fnsh){
+        String select = "SELECT * FROM public.room r";
+        String join = " JOIN public.hotel h ON r.room_hotel_id = h.hotel_id";
+
         ArrayList<String> whereList=new ArrayList<>();
 
         if (hotelId!=0){
             whereList.add("room_hotel_id = " + hotelId);
         }
-        if (roomType!=null){
-            whereList.add("room_room_type='"+ roomType.toString()+"'");
+        if (hotelName != null && !hotelName.isEmpty()) {
+            whereList.add("h.hotel_name ILIKE '%" + hotelName + "%'");
         }
-        if (television!=null){
-            whereList.add("room_television=' "+television.toString()+"'");
+        if (address != null && !address.isEmpty()) {
+            whereList.add("h.hotel_adress ILIKE '%" + address + "%'");
         }
-        if (miniBar!=null){
-            whereList.add("room_minibar=' "+miniBar.toString()+"'");
+        if (room_strt != null && room_fnsh != null) {
+            String roomStrtStr=room_strt.toString();
+            String room_FnshStr= room_fnsh.toString();
+
+
+            // Add a condition to filter by year if necessary
+            whereList.add("EXTRACT(YEAR FROM '" + room_strt + "') = EXTRACT(YEAR FROM current_date)"); // Example for current year
+            whereList.add("('" + room_strt + "' BETWEEN h.hotel_high_season_strt AND h.hotel_high_season_fnsh " +
+                    "OR '" + room_fnsh + "' BETWEEN h.hotel_high_season_strt AND h.hotel_high_season_fnsh " +
+                    "OR '" + room_strt + "' BETWEEN h.hotel_low_season_strt AND h.hotel_low_season_fnsh " +
+                    "OR '" + room_fnsh + "' BETWEEN h.hotel_low_season_strt AND h.hotel_low_season_fnsh " +
+                    "OR (h.hotel_high_season_strt BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
+                    "OR (h.hotel_high_season_fnsh BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
+                    "OR (h.hotel_low_season_strt BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
+                    "OR (h.hotel_low_season_fnsh BETWEEN '" + room_strt + "' AND '" + room_fnsh + "'))");
+
+            /*whereList.add("('" + room_strt + "' BETWEEN h.hotel_high_season_strt AND h.hotel_high_season_fnsh " +
+                    "OR '" + room_fnsh + "' BETWEEN h.hotel_high_season_strt AND h.hotel_high_season_fnsh " +
+                    "OR '" + room_strt + "' BETWEEN h.hotel_low_season_strt AND h.hotel_low_season_fnsh " +
+                    "OR '" + room_fnsh + "' BETWEEN h.hotel_low_season_strt AND h.hotel_low_season_fnsh " +
+                    "OR (h.hotel_high_season_strt BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
+                    "OR (h.hotel_high_season_fnsh BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
+                    "OR (h.hotel_low_season_strt BETWEEN '" + room_strt + "' AND '" + room_fnsh + "') " +
+                    "OR (h.hotel_low_season_fnsh BETWEEN '" + room_strt + "' AND '" + room_fnsh + "'))");*/
         }
-        if (gameConsole!=null){
-            whereList.add("room_game_console=' "+gameConsole.toString()+"'");
-        }
-        if (safe!=null){
-            whereList.add("room_safe=' "+safe.toString()+"'");
-        }
-        if (projection!=null){
-            whereList.add("room_projection=' "+projection.toString()+"'");
-        }
+
         String whereStr = String.join(" AND ", whereList);
-        String query = select;
+        String query = select + join;
         if (whereStr.length()>0){
             query+=" WHERE " + whereStr;
         }

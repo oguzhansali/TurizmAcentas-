@@ -18,8 +18,12 @@ import view.RoomView;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+
+import static java.util.Date.*;
 
 public class EmployeeView extends Layout {
     private JPanel container;
@@ -313,38 +317,99 @@ public class EmployeeView extends Layout {
 
         });
 
+        //Oda arama işlemi gerçekleşti.
         btn_search_room.addActionListener(e -> {
             ComboItem selectedHotel = (ComboItem) this.cmb_rooms_hotel.getSelectedItem();
             int hotelId = 0;
+            String hotelName =null;
+            String address = null;
+
             if (selectedHotel != null) {
                 hotelId = selectedHotel.getKey();
+                hotelName = selectedHotel.toString(); // Assuming ComboItem has a meaningful toString() method
             }
-            Room.RoomType roomType = (Room.RoomType) cmb_room_roomtype.getSelectedItem();
-            Room.Television television = (Room.Television) cmb_room_television.getSelectedItem();
-            Room.MiniBar miniBar = (Room.MiniBar) cmb_room_minibar.getSelectedItem();
-            Room.GameConsole gameConsole = (Room.GameConsole) cmb_room_gameconsole.getSelectedItem();
-            Room.Safe safe = (Room.Safe) cmb_room_safe.getSelectedItem();
-            Room.Projection projection = (Room.Projection) cmb_room_projection.getSelectedItem();
-            String bedCount = fld_room_bed_count.getText();
+
+            /*Object selectedCity = this.cmb_room_city.getSelectedItem();
+            if (selectedCity != null) {
+                String selectedCityStr = selectedCity.toString();
+
+                // Check if the selected city already exists in the combo box
+                boolean cityExists = false;
+                for (int i = 0; i < this.cmb_room_city.getItemCount(); i++) {
+                    if (selectedCityStr.equals(this.cmb_room_city.getItemAt(i).toString())) {
+                        cityExists = true;
+                        break;
+                    }
+                }
+
+                // If the city does not exist in the combo box, add it
+                if (!cityExists) {
+                    this.cmb_room_city.addItem(selectedCityStr);
+                }
+
+                // Set the address to the selected city
+                address = selectedCityStr;
+            }*/
+            // Bu kısım, sınıfın üstünde tanımlı olabilir veya sınıfın alanı olarak tanımlanabilir.
+            Set<String> addedCities = new HashSet<>();
+
+// Ekleme işlemi sırasında şehir ekleme ve adres atama kısmı
+            Object selectedCity = this.cmb_room_city.getSelectedItem();
+            if (selectedCity != null) {
+                String selectedCityStr = selectedCity.toString();
+
+                // Eğer şehir daha önce eklenmediyse
+                if (!addedCities.contains(selectedCityStr)) {
+                    // Şehri Set'e ekleyin ve ComboBox'a ekleyin
+                    addedCities.add(selectedCityStr);
+                    this.cmb_room_city.addItem(selectedCityStr);
+                }
+
+                // Adresi seçilen şehire atayın
+                address = selectedCityStr;
+            }
 
 
-            ArrayList<Room> roomList = this.roomManager.searchForTable(
+            java.sql.Date room_strt = null;
+            java.sql.Date room_fnsh = null;
+
+
+            try {
+                if (!this.fld_room_strt.getText().isEmpty()) {
+                    LocalDate startDate = LocalDate.parse(this.fld_room_strt.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    room_strt = java.sql.Date.valueOf(startDate);
+                }
+
+                if (!this.fld_fnsh_date.getText().isEmpty()) {
+                    LocalDate endDate = LocalDate.parse(this.fld_fnsh_date.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    room_fnsh = java.sql.Date.valueOf(endDate);
+                }
+            } catch (DateTimeParseException ex) {
+                ex.printStackTrace();
+                // Handle or log the exception as needed
+                // You can provide feedback to the user about the incorrect date format
+            }
+
+
+            ArrayList<Room> roomListBySearch = this.roomManager.searchForTable(
                     hotelId,
-                    roomType,
-                    television,
-                    miniBar,
-                    gameConsole,
-                    safe,
-                    projection,
-                    bedCount
+                    hotelName,
+                    address,
+                    room_strt,
+                    room_fnsh
 
             );
-            ArrayList<Object[]> roomRowListBySearch = this.roomManager.getForTable(this.col_room.length, roomList);
+            ArrayList<Object[]> roomRowListBySearch = this.roomManager.getForTable(this.col_room.length, roomListBySearch);
             loadRoomTable(roomRowListBySearch);
         });
         btn_cancel_room.addActionListener(e -> {
+            //Combo boxes ları temizle.
             this.cmb_room_city.setSelectedItem(null);
             this.cmb_rooms_hotel.setSelectedItem(null);
+            //date fielsleri temizle
+            this.fld_room_strt.setText("");
+            this.fld_room_fnsh.setText("");
+            //tabloyu temizle.
             loadRoomTable(null);
 
         });

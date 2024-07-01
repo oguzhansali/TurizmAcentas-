@@ -8,6 +8,7 @@ import entity.Hotel;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class HotelManager {
@@ -83,6 +84,7 @@ public class HotelManager {
             return null;
         }
     }
+
 
 
 
