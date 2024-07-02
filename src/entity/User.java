@@ -14,12 +14,12 @@ public class User {
     public User(String text) {
     }
 
-    public enum Role{
+    public enum Role {
         ADMİN,
         EMPLOYEE
     }
 
-
+    //Constructor
     public User(int id, String username, String password, Role role) {
         this.id = id;
         this.username = username;
@@ -27,6 +27,7 @@ public class User {
         this.role = role;
     }
 
+    //User için getter ve setter
     public Integer getId() {
         return id;
     }

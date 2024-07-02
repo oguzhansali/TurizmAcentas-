@@ -14,17 +14,22 @@ import java.util.Date;
 
 public class RoomManager {
     private final RoomDao roomDao = new RoomDao();
-    private final BookDao bookDao=new BookDao();
+    private final BookDao bookDao = new BookDao();
 
-    public Room getById(int id){
+    // ID'ye göre oda getiren metot.
+    public Room getById(int id) {
         return this.roomDao.getById(id);
     }
-    public ArrayList<Room> findAll(){
+
+    // ID'ye göre oda getiren metot.
+    public ArrayList<Room> findAll() {
         return this.roomDao.findAll();
     }
-    public ArrayList<Object[]> getForTable(int size,ArrayList<Room> roomList){
+
+    // Tablo gösterimi için odaları hazırlayan metot.
+    public ArrayList<Object[]> getForTable(int size, ArrayList<Room> roomList) {
         ArrayList<Object[]> roomObjList = new ArrayList<>();
-        for (Room obj : roomList){
+        for (Room obj : roomList) {
             int i = 0;
             Object[] rowObject = new Object[size];
             rowObject[i++] = obj.getId();
@@ -44,31 +49,41 @@ public class RoomManager {
         }
         return roomObjList;
     }
-    public boolean save(Room room){
-        if (room.getId()>0 && this.getById(room.getId())!=null){
+
+    // Oda kaydetme metodu.
+    public boolean save(Room room) {
+        if (room.getId() > 0 && this.getById(room.getId()) != null) {
             Helper.showMsg("error");
             return false;
         }
         return this.roomDao.save(room);
     }
-    public boolean update(Room room){
-        if (this.getById(room.getId())==null){
-            Helper.showMsg(room.getId()+" ID kayıtlı oda bulunamadı.");
+
+    // Oda güncelleme metodu.
+    public boolean update(Room room) {
+        if (this.getById(room.getId()) == null) {
+            Helper.showMsg(room.getId() + " ID kayıtlı oda bulunamadı.");
             return false;
         }
         return this.roomDao.update(room);
     }
-    public boolean delete(int id){
-        if (this.getById(id) ==null){
-            Helper.showMsg(id+" ID kayıtlı oda bulunamadı. ");
+
+    // Oda silme metodu.
+    public boolean delete(int id) {
+        if (this.getById(id) == null) {
+            Helper.showMsg(id + " ID kayıtlı oda bulunamadı. ");
             return false;
         }
         return this.roomDao.delete(id);
     }
-    public ArrayList<Room> getByListHotelId(int hotelId){
+
+    // Otel ID'sine göre odaları getiren metot.
+    public ArrayList<Room> getByListHotelId(int hotelId) {
         return this.roomDao.getByListHotelId(hotelId);
     }
-    public ArrayList<Room> searchForTable(int hotelId, String hotelName, String address, String strt_date, String fnsh_date){
+
+    // Oda arama metodu.
+    public ArrayList<Room> searchForTable(int hotelId, String hotelName, String address, String strt_date, String fnsh_date) {
         String query = "SELECT * FROM public.room AS r LEFT JOIN public.hotel AS h ON r.room_hotel_id = h.hotel_id";
 
         ArrayList<String> where = new ArrayList<>();
@@ -83,7 +98,7 @@ public class RoomManager {
             where.add("h.hotel_adress ILIKE '%" + address + "%'");
         }
 
-        // Check if the given dates fall between hotel_open and hotel_close dates
+        // Tarihlerin otel açılış ve kapanış tarihleri arasında olup olmadığını kontrol et
         if (strt_date != null && !strt_date.isEmpty()) {
             where.add("'" + strt_date + "' BETWEEN h.hotel_open AND h.hotel_close");
         }
@@ -103,11 +118,9 @@ public class RoomManager {
     }
 
 
-
-
-
-    public ArrayList<Room> searchForBooking(String strt_date, String fnsh_date, Room.RoomType roomType, Room.Television television, Room.MiniBar miniBar, Room.GameConsole gameConsole, Room.Safe safe, Room.Projection projection) {
-        String query = "SELECT * FROM public.room as r LEFT JOIN public.hotel as h";
+    // Rezervasyon yapılacak odaları arayan metot.
+    public ArrayList<Room> searchForBooking(String strt_date, String fnsh_date) {
+        String query = "SELECT * FROM public.room as r JOIN public.hotel as h";
 
         ArrayList<String> where = new ArrayList<>();
         ArrayList<String> joinWhere = new ArrayList<>();
@@ -115,36 +128,16 @@ public class RoomManager {
 
         joinWhere.add("r.room_hotel_id = h.hotel_id");
 
+
         // Tarihlerin boş olup olmadığını kontrol edin
-        if (strt_date == null || strt_date.isEmpty()) {
-            throw new IllegalArgumentException("Başlangıç tarihi boş olamaz");
-        }
-        if (fnsh_date == null || fnsh_date.isEmpty()) {
-            throw new IllegalArgumentException("Bitiş tarihi boş olamaz");
+        if (!strt_date.isEmpty() && !fnsh_date.isEmpty()) {
+            strt_date = LocalDate.parse(strt_date, DateTimeFormatter.ofPattern("dd/MM/yyyy")).toString();
+            fnsh_date = LocalDate.parse(fnsh_date, DateTimeFormatter.ofPattern("dd/MM/yyyy")).toString();
+            where.add("('" + strt_date + "' BETWEEN hotel_open AND hotel_close)");
+            where.add("('" + fnsh_date + "' BETWEEN hotel_open AND hotel_close)");
         }
 
-        // Tarih formatını dönüştürme
-        strt_date = LocalDate.parse(strt_date, DateTimeFormatter.ofPattern("dd/MM/yyyy")).toString();
-        fnsh_date = LocalDate.parse(fnsh_date, DateTimeFormatter.ofPattern("dd/MM/yyyy")).toString();
-
-        if (roomType != null) {
-            where.add("r.room_room_type = '" + roomType.toString() + "'");
-        }
-        if (television != null) {
-            where.add("r.room_television = '" + television.toString() + "'");
-        }
-        if (miniBar != null) {
-            where.add("r.room_minibar = '" + miniBar.toString() + "'");
-        }
-        if (gameConsole != null) {
-            where.add("r.room_game_console = '" + gameConsole.toString() + "'");
-        }
-        if (safe != null) {
-            where.add("r.room_safe = '" + safe.toString() + "'");
-        }
-        if (projection != null) {
-            where.add("r.room_projection = '" + projection.toString() + "'");
-        }
+        where.add(" TO_NUMBER(room_stock,'999999')>0");
 
         String whereStr = String.join(" AND ", where);
         String joinStr = String.join(" AND ", joinWhere);
@@ -158,22 +151,6 @@ public class RoomManager {
 
         ArrayList<Room> searchedRoomList = this.roomDao.selectByQuery(query);
 
-        bookOrWhere.add("('" + strt_date + "' BETWEEN book_booking_strt_date AND book_booking_fnsh_date)");
-        bookOrWhere.add("('" + fnsh_date + "' BETWEEN book_booking_strt_date AND book_booking_fnsh_date)");
-        bookOrWhere.add("(book_booking_strt_date BETWEEN '" + strt_date + "' AND '" + fnsh_date + "')");
-        bookOrWhere.add("(book_booking_fnsh_date BETWEEN '" + strt_date + "' AND '" + fnsh_date + "')");
-
-        String bookOrWhereStr = String.join(" OR ", bookOrWhere);
-        String bookQuery = "SELECT * FROM public.book WHERE " + bookOrWhereStr;
-
-        ArrayList<Book> bookList = this.bookDao.selectByQuery(bookQuery);
-        ArrayList<Integer> busyRoomId = new ArrayList<>();
-        for (Book book : bookList) {
-            busyRoomId.add(book.getRoom_id());
-        }
-
-        // Bu işlem ile busyRoomId listesinin içinde meşgul odaları listeden siler.
-        searchedRoomList.removeIf(room -> busyRoomId.contains(room.getId()));
 
         return searchedRoomList;
     }

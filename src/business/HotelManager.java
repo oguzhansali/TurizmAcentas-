@@ -12,23 +12,26 @@ import java.util.Date;
 import java.util.List;
 
 public class HotelManager {
-    private HotelDao hotelDao= new HotelDao();
-    private RoomDao roomDao=new RoomDao();
+    private HotelDao hotelDao = new HotelDao();
+    private RoomDao roomDao = new RoomDao();
 
-    public Hotel getById(int id){
+    // ID'ye göre otel getiren metot.
+    public Hotel getById(int id) {
         return this.hotelDao.getById(id);
     }
 
-
-    public ArrayList<Hotel> findAll(){
+    // Tüm otelleri getiren metot.
+    public ArrayList<Hotel> findAll() {
         return this.hotelDao.findAll();
     }
 
-    public ArrayList<Object[]> getForTable(int size){
+
+    // Tablo gösterimi için otelleri hazırlayan metot.
+    public ArrayList<Object[]> getForTable(int size) {
         ArrayList<Object[]> hotelObjList = new ArrayList<>();
         ArrayList<Hotel> hotelList = this.findAll();
-        for (Hotel obj: hotelList){
-            int i=0;
+        for (Hotel obj : hotelList) {
+            int i = 0;
             Object[] rowObject = new Object[size];
             rowObject[i++] = obj.getId();
             rowObject[i++] = obj.getName();
@@ -49,34 +52,39 @@ public class HotelManager {
 
     }
 
-    public boolean save(Hotel hotel){
-        if (hotel.getId()>0 && this.getById(hotel.getId())!=null){
+    // Otel kaydetme metodu.
+    public boolean save(Hotel hotel) {
+        if (hotel.getId() > 0 && this.getById(hotel.getId()) != null) {
             Helper.showMsg("error");
             return false;
         }
         return this.hotelDao.save(hotel);
     }
-    public boolean update(Hotel hotel){
-        if (this.getById(hotel.getId())==null){
-            Helper.showMsg(hotel.getId()+ " ID kayıtlı hotel bulunamadı.");
+
+    // Otel güncelleme metodu.
+    public boolean update(Hotel hotel) {
+        if (this.getById(hotel.getId()) == null) {
+            Helper.showMsg(hotel.getId() + " ID kayıtlı hotel bulunamadı.");
             return false;
         }
         return this.hotelDao.update(hotel);
     }
-    public boolean delete(int id){
-        if (this.getById(id)==null){
-            Helper.showMsg(id+ " ID kayıtlı hotel bulunamadı");
+
+    // Otel silme metodu.
+    public boolean delete(int id) {
+        if (this.getById(id) == null) {
+            Helper.showMsg(id + " ID kayıtlı hotel bulunamadı");
             return false;
         }
+        // Otele ait odaları da sil.
         this.roomDao.deleteRoomsByHotelId(id);
         return this.hotelDao.delete(id);
     }
 
+    // Otel ekleme metodu.
     public boolean add(Hotel hotel) {
         return this.save(hotel);
     }
-
-
 
 
 }

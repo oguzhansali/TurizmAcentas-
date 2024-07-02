@@ -7,29 +7,32 @@ import java.sql.SQLException;
 public class Db {
     private static Db instance = null;
     private Connection connection = null;
-    private final   String DB_URL = "jdbc:postgresql://localhost:5432/turizmacente";
-    private final  String DB_USERNAME = "postgres";
-    private final String DB_PASS = "40427034004";
+    private final String DB_URL = "jdbc:postgresql://localhost:5432/turizmacente";// Veritabanı URL'si
+    private final String DB_USERNAME = "postgres"; // Veritabanı kullanıcı adı
+    private final String DB_PASS = "40427034004";// Veritabanı şifresi
 
-    private Db(){
+    private Db() {
         try {
-            this.connection = DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASS);
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
+            this.connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASS);// Veritabanı bağlantısı oluşturuluyor
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());// Bağlantı hatası durumunda hata mesajı yazdırılıyor
         }
     }
-    public Connection getConnection(){
+
+    // Bağlantıyı geri döndüren metod
+    public Connection getConnection() {
         return connection;
     }
-    public static  Connection getInstance(){
+
+    // Singleton deseni ile veritabanı bağlantısını yöneten metod
+    public static Connection getInstance() {
         try {
-            if (instance==null|| instance.getConnection().isClosed()){
+            if (instance == null || instance.getConnection().isClosed()) {
                 instance = new Db();
             }
 
 
-
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return instance.getConnection();

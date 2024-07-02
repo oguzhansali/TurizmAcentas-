@@ -11,152 +11,164 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RoomDao {
-    private Connection con;
-    private HotelDao hotelDao = new HotelDao();
+    private Connection con;// Veritabanı bağlantısı
+    private HotelDao hotelDao = new HotelDao();// HotelDao nesnesi
 
-    public RoomDao(){
-        this.con= Db.getInstance();
-        this.hotelDao = new HotelDao();
+    public RoomDao() {
+        this.con = Db.getInstance(); // Veritabanı bağlantısını Db sınıfından al
+        this.hotelDao = new HotelDao(); // HotelDao nesnesi oluştur
     }
 
-    public Room getById(int id){
+    // ID'ye göre oda getirir
+    public Room getById(int id) {
         Room obj = null;
         String query = "SELECT * FROM public.room WHERE room_id = ?";
         try {
-            PreparedStatement pr =con.prepareStatement(query);
-            pr.setInt(1,id);
+            PreparedStatement pr = con.prepareStatement(query);
+            pr.setInt(1, id);
             ResultSet rs = pr.executeQuery();
-            if (rs.next()){
+            if (rs.next()) {
                 obj = this.match(rs);
             }
 
-        }catch (SQLException throwables){
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return obj;
     }
-    public ArrayList<Room> findAll(){
+
+    // Tüm odaları getirir
+    public ArrayList<Room> findAll() {
         return this.selectByQuery("SELECT * FROM public.room ORDER BY room_id ASC");
     }
 
-    public ArrayList<Room> getByListHotelId(int hotelId){
-        return this.selectByQuery("SELECT * FROM public.room WHERE room_hotel_id= "+hotelId);
+    // Belirli bir otel ID'sine ait odaları getirir
+    public ArrayList<Room> getByListHotelId(int hotelId) {
+        return this.selectByQuery("SELECT * FROM public.room WHERE room_hotel_id= " + hotelId);
     }
-    public ArrayList<Room> selectByQuery(String query){
+
+    // Verilen sorguya göre odaları getirir
+    public ArrayList<Room> selectByQuery(String query) {
         ArrayList<Room> roomList = new ArrayList<>();
         try {
             ResultSet rs = this.con.createStatement().executeQuery(query);
-            while (rs.next()){
+            while (rs.next()) {
                 roomList.add(this.match(rs));
             }
-        }catch (SQLException throwables){
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return roomList;
     }
-    public boolean save(Room room){
-        String query = "INSERT INTO public.room"+
-                "("+
+
+    // Yeni oda ekler
+    public boolean save(Room room) {
+        String query = "INSERT INTO public.room" +
+                "(" +
                 //"room_id, "+
-                "room_hotel_id, "+
-                "room_bed_count, "+
-                "room_squarmeter, "+
-                "room_stock, "+
-                "room_room_type, "+
-                "room_television, "+
-                "room_minibar, "+
-                "room_game_console, "+
-                "room_safe, "+
-                "room_projection,"+
-                "room_adult_price,"+
-                "room_kid_price"+
-                ")"+
+                "room_hotel_id, " +
+                "room_bed_count, " +
+                "room_squarmeter, " +
+                "room_stock, " +
+                "room_room_type, " +
+                "room_television, " +
+                "room_minibar, " +
+                "room_game_console, " +
+                "room_safe, " +
+                "room_projection," +
+                "room_adult_price," +
+                "room_kid_price" +
+                ")" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pr = con.prepareStatement(query);
             //pr.setInt(1,room.getId());
-            pr.setInt(1,room.getHotel_id());
-            pr.setString(2,room.getBed_count());
-            pr.setString(3,room.getSquaremeter());
-            pr.setString(4,room.getStock());
-            pr.setString(5,room.getRoomType().toString());
-            pr.setString(6,room.getTelevision().toString());
-            pr.setString(7,room.getMiniBar().toString());
-            pr.setString(8,room.getGameConsole().toString());
-            pr.setString(9,room.getSafe().toString());
-            pr.setString(10,room.getProjection().toString());
-            pr.setString(11,room.getAdult_price());
-            pr.setString(12,room.getKid_price());
-            return pr.executeUpdate() !=-1;
-        }catch (SQLException throwables){
+            pr.setInt(1, room.getHotel_id());
+            pr.setString(2, room.getBed_count());
+            pr.setString(3, room.getSquaremeter());
+            pr.setString(4, room.getStock());
+            pr.setString(5, room.getRoomType().toString());
+            pr.setString(6, room.getTelevision().toString());
+            pr.setString(7, room.getMiniBar().toString());
+            pr.setString(8, room.getGameConsole().toString());
+            pr.setString(9, room.getSafe().toString());
+            pr.setString(10, room.getProjection().toString());
+            pr.setString(11, room.getAdult_price());
+            pr.setString(12, room.getKid_price());
+            return pr.executeUpdate() != -1;
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return true;
     }
-    public boolean update(Room room){
-        String query = "UPDATE public.room SET "+
-                "room_hotel_id = ?, "+
-                "room_bed_count = ?, "+
-                "room_squarmeter = ?, "+
-                "room_stock = ?, "+
-                "room_room_type = ?, "+
-                "room_television = ?, "+
-                "room_minibar = ?, "+
-                "room_game_console = ?, "+
-                "room_safe = ? , "+
-                "room_projection= ?,"+
-                "room_adult_price= ?, "+
-                "room_kid_price= ? "+
+
+    // Odayı günceller
+    public boolean update(Room room) {
+        String query = "UPDATE public.room SET " +
+                "room_hotel_id = ?, " +
+                "room_bed_count = ?, " +
+                "room_squarmeter = ?, " +
+                "room_stock = ?, " +
+                "room_room_type = ?, " +
+                "room_television = ?, " +
+                "room_minibar = ?, " +
+                "room_game_console = ?, " +
+                "room_safe = ? , " +
+                "room_projection= ?," +
+                "room_adult_price= ?, " +
+                "room_kid_price= ? " +
                 " WHERE room_id = ?";
 
         try {
             PreparedStatement pr = con.prepareStatement(query);
-            pr.setInt(1,room.getHotel_id());
-            pr.setString(2,room.getBed_count());
-            pr.setString(3,room.getSquaremeter());
-            pr.setString(4,room.getStock());
-            pr.setString(5,room.getRoomType().toString());
-            pr.setString(6,room.getTelevision().toString());
-            pr.setString(7,room.getMiniBar().toString());
-            pr.setString(8,room.getGameConsole().toString());
-            pr.setString(9,room.getSafe().toString());
-            pr.setString(10,room.getProjection().toString());
-            pr.setString(11,room.getAdult_price());
-            pr.setString(12,room.getKid_price());
-            pr.setInt(13,room.getId());
+            pr.setInt(1, room.getHotel_id());
+            pr.setString(2, room.getBed_count());
+            pr.setString(3, room.getSquaremeter());
+            pr.setString(4, room.getStock());
+            pr.setString(5, room.getRoomType().toString());
+            pr.setString(6, room.getTelevision().toString());
+            pr.setString(7, room.getMiniBar().toString());
+            pr.setString(8, room.getGameConsole().toString());
+            pr.setString(9, room.getSafe().toString());
+            pr.setString(10, room.getProjection().toString());
+            pr.setString(11, room.getAdult_price());
+            pr.setString(12, room.getKid_price());
+            pr.setInt(13, room.getId());
             return pr.executeUpdate() != -1;
-        }catch (SQLException throwables){
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return true;
     }
 
-    public boolean delete(int room_id){
+    // Odayı siler
+    public boolean delete(int room_id) {
         String query = "DELETE FROM public.room WHERE room_id = ?";
         try {
             PreparedStatement pr = con.prepareStatement(query);
-            pr.setInt(1,room_id);
-            return pr.executeUpdate() !=-1;
-        }catch (SQLException throwables){
+            pr.setInt(1, room_id);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return true;
     }
 
-    public boolean deleteRoomsByHotelId(int hotelId){
+    // Belirli bir otel ID'sine ait odaları siler
+    public boolean deleteRoomsByHotelId(int hotelId) {
         String query = "DELETE FROM public.room WHERE room_hotel_id = ?";
         try {
             PreparedStatement pr = con.prepareStatement(query);
-            pr.setInt(1,hotelId);
-            return pr.executeUpdate() !=-1;
-        }catch (SQLException throwables){
+            pr.setInt(1, hotelId);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return true;
     }
 
-
-    public Room match(ResultSet rs) throws SQLException{
+    // ResultSet'teki verileri Room nesnesine eşleştirir
+    public Room match(ResultSet rs) throws SQLException {
         Room room = new Room();
         room.setId(rs.getInt("room_id"));
         room.setHotel(this.hotelDao.getById(rs.getInt("room_hotel_id")));

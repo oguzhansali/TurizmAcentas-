@@ -21,35 +21,41 @@ public class Room {
 
     }
 
-    public enum RoomType{
+    //Oda tipi ve özellikleri için enum tanımı
+    public enum RoomType {
         Single_Oda,
         Double_Oda,
         Junior_Suite_Oda,
         Suite_Oda
     }
-    public  enum    Television{
-        VAR,
-        YOK
-    }
-    public enum MiniBar{
-        VAR,
-        YOK
-    }
-    public enum GameConsole{
-        VAR,
-        YOK
-    }
-    public enum Safe{
+
+    public enum Television {
         VAR,
         YOK
     }
 
-    public enum Projection{
+    public enum MiniBar {
         VAR,
         YOK
     }
 
-    public Room(int id, int hotel_id, String bed_count, String squaremeter,String stock, RoomType roomType, Television television, MiniBar miniBar, GameConsole gameConsole, Safe safe, Projection projection,String adult_price,String kid_price) {
+    public enum GameConsole {
+        VAR,
+        YOK
+    }
+
+    public enum Safe {
+        VAR,
+        YOK
+    }
+
+    public enum Projection {
+        VAR,
+        YOK
+    }
+
+    //Constructor
+    public Room(int id, int hotel_id, String bed_count, String squaremeter, String stock, RoomType roomType, Television television, MiniBar miniBar, GameConsole gameConsole, Safe safe, Projection projection, String adult_price, String kid_price) {
         this.id = id;
         this.hotel_id = hotel_id;
         this.bed_count = bed_count;
@@ -61,12 +67,12 @@ public class Room {
         this.gameConsole = gameConsole;
         this.safe = safe;
         this.projection = projection;
-        this.adult_price=adult_price;
-        this.kid_price=kid_price;
+        this.adult_price = adult_price;
+        this.kid_price = kid_price;
 
     }
 
-
+    //Oda için getter ve setter
     public int getId() {
         return id;
     }

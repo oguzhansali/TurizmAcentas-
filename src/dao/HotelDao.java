@@ -10,48 +10,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HotelDao {
-    private Connection con;
+    private Connection con;// Veritabanı bağlantısı
 
-    public HotelDao(){
-        this.con= Db.getInstance();
-    }
+    public HotelDao() {
+        this.con = Db.getInstance();
+    } // Veritabanı bağlantısını Db sınıfından al
 
-
-    public ArrayList<Hotel> findAll(){
+    // Tüm otelleri getirir
+    public ArrayList<Hotel> findAll() {
         ArrayList<Hotel> hotelList = new ArrayList<>();
-        String sql  = "SELECT * FROM public.hotel";
+        String sql = "SELECT * FROM public.hotel";
 
         try {
             ResultSet rs = this.con.createStatement().executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
 
                 hotelList.add(this.match(rs));
 
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
         return hotelList;
     }
-    public Hotel getById(int id){
+
+    // ID'ye göre otel getirir
+    public Hotel getById(int id) {
         Hotel obj = null;
         String query = "SELECT * FROM public.hotel WHERE hotel_id = ? ";
         try {
             PreparedStatement pr = con.prepareStatement(query);
-            pr.setInt(1,id);
+            pr.setInt(1, id);
             ResultSet rs = pr.executeQuery();
             if (rs.next()) obj = this.match(rs);
-        }catch (SQLException | ParseException throwables){
+        } catch (SQLException | ParseException throwables) {
             throwables.printStackTrace();
         }
         return obj;
     }
 
 
-    //Kullanıcıdan alınan veriler Db ile eşleştirildi.
-    public Hotel match (ResultSet rs) throws SQLException, ParseException {
+    // ResultSet'teki verileri Hotel nesnesine eşleştirir
+    public Hotel match(ResultSet rs) throws SQLException, ParseException {
         Hotel newHotel = new Hotel();
         newHotel.setId(rs.getInt("hotel_id"));
         newHotel.setName(rs.getString("hotel_name"));
@@ -69,20 +71,21 @@ public class HotelDao {
         String[] hostelTypeStrings = rs.getString("hotel_hostel_type").split(",");
         for (String type : hostelTypeStrings) {
             if (!type.isEmpty()) {
-                newHotel.addHostelType(Hotel.HostelType.valueOf(type.trim().replace("[","").replace("]","")));
+                newHotel.addHostelType(Hotel.HostelType.valueOf(type.trim().replace("[", "").replace("]", "")));
             }
         }
         // Facility feature'larını ArrayList olarak alabilmek için
         String[] facilityFeatureStrings = rs.getString("hotel_facility_type").split(",");
         for (String feature : facilityFeatureStrings) {
             if (!feature.isEmpty()) {
-                newHotel.addFacilityFeature(Hotel.FacilityFeature.valueOf(feature.trim().replace("[","").replace("]","")));
+                newHotel.addFacilityFeature(Hotel.FacilityFeature.valueOf(feature.trim().replace("[", "").replace("]", "")));
             }
         }
         return newHotel;
     }
 
-    public boolean save (Hotel hotel){
+    // Yeni otel ekler
+    public boolean save(Hotel hotel) {
         String query = "INSERT INTO public.hotel " +
                 "(hotel_name, hotel_adress, hotel_mail, hotel_mpno, hotel_star, hotel_high_season_strt, hotel_high_season_fnsh, hotel_hostel_type, hotel_facility_type, hotel_open, hotel_close) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
@@ -107,8 +110,8 @@ public class HotelDao {
                 pr.setNull(7, Types.DATE);
             }
 
-            pr.setString(8,hotel.getHostelType().toString());
-            pr.setString(9,hotel.getFacilityFeature().toString());
+            pr.setString(8, hotel.getHostelType().toString());
+            pr.setString(9, hotel.getFacilityFeature().toString());
 
             if (hotel.getHotel_open() != null) {
                 pr.setDate(10, Date.valueOf(hotel.getHotel_open()));
@@ -137,7 +140,8 @@ public class HotelDao {
 
     }
 
-    public boolean update(Hotel hotel){
+    // Otel bilgilerini günceller
+    public boolean update(Hotel hotel) {
         String query = "UPDATE public.hotel SET " +
                 "hotel_name = ?, " +
                 "hotel_adress = ?, " +
@@ -148,8 +152,8 @@ public class HotelDao {
                 "hotel_high_season_fnsh = ?, " +
                 "hotel_hostel_type = ?, " +
                 "hotel_facility_type = ?, " +
-                "hotel_open = ?,"+
-                "hotel_close = ?"+
+                "hotel_open = ?," +
+                "hotel_close = ?" +
                 "WHERE hotel_id = ?";
         try {
             PreparedStatement pr = con.prepareStatement(query);
@@ -161,8 +165,8 @@ public class HotelDao {
             pr.setDate(6, Date.valueOf(hotel.getHigh_season_strt_date()));
             pr.setDate(7, Date.valueOf(hotel.getHigh_season_fnsh_date()));
 
-            pr.setString(8,hotel.getHostelType().toString());
-            pr.setString(9,hotel.getFacilityFeature().toString());
+            pr.setString(8, hotel.getHostelType().toString());
+            pr.setString(9, hotel.getFacilityFeature().toString());
 
             pr.setDate(10, Date.valueOf(hotel.getHotel_open()));
             pr.setDate(11, Date.valueOf(hotel.getHotel_close()));
@@ -175,30 +179,18 @@ public class HotelDao {
         }
         return true;
     }
-    public  boolean delete (int hotel){
+
+    // Oteli siler
+    public boolean delete(int hotel) {
         String query = "DELETE FROM public.hotel WHERE hotel_id = ?";
         try {
             PreparedStatement pr = con.prepareStatement(query);
             pr.setInt(1, hotel);
             return pr.executeUpdate() > 0;
-        }catch (SQLException throwables){
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return true;
     }
 
-    // hotel tablosundan otel adlarını alacak sorgu
-    public List<String> getAllHotelNames() throws SQLException {
-        List<String> hotelNames = new ArrayList<>();
-        String query = "SELECT hotel_name FROM public.hotel";
-
-        try (PreparedStatement stmt = con.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                hotelNames.add(rs.getString("hotel_name"));
-            }
-        }
-
-        return hotelNames;
-    }
 }

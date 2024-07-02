@@ -19,6 +19,7 @@ public class Book {
 
     }
 
+    //Rezervasyonalr için getter ve setter
     public int getId() {
         return id;
     }

@@ -16,19 +16,21 @@ public class Hotel {
     private LocalDate high_season_fnsh_date;
     private LocalDate hotel_open;
     private LocalDate hotel_close;
-    private ArrayList<HostelType>   hostelTypes=new ArrayList<>();
-    private ArrayList< FacilityFeature >facilityFeatures=new ArrayList<>();
+    private ArrayList<HostelType> hostelTypes = new ArrayList<>();
+    private ArrayList<FacilityFeature> facilityFeatures = new ArrayList<>();
 
 
-
-    public enum Star{
+    //Otel yıldızı için enum tanımı.
+    public enum Star {
         BIR_YILDIZLI,
         IKI_YILDIZLI,
         UC_YILDIZLI,
         DORT_YILDIZLI,
         BES_YILDIZLI
     }
-    public enum HostelType{
+
+    //Pansiyon Tipi için enum tanımı
+    public enum HostelType {
         ULTRA_HER_SEY_DAHIL,
         HER_SEY_DAHIL,
         ODA_KAHVALTI,
@@ -37,7 +39,9 @@ public class Hotel {
         SADECE_YATAK,
         ALKOL_HARIÇ_FULL_CREDIT
     }
-    public  enum FacilityFeature{
+
+    //Tesis Özellikleri için enum tanımı
+    public enum FacilityFeature {
         UCRETSIZ_OTOPARK,
         UCRETSIZ_WIFI,
         YUZME_HAVUZU,
@@ -47,8 +51,8 @@ public class Hotel {
         TUM_GUN_ODA_SERVISI
     }
 
-
-    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, LocalDate high_season_strt_date, LocalDate high_season_fnsh_date,LocalDate hotel_open,LocalDate hotel_close,ArrayList<HostelType>   hostelTypes,ArrayList< FacilityFeature >facilityFeatures) {
+    //Constructor
+    public Hotel(int id, String name, String adress, String mail, String mpno, Star star, LocalDate high_season_strt_date, LocalDate high_season_fnsh_date, LocalDate hotel_open, LocalDate hotel_close, ArrayList<HostelType> hostelTypes, ArrayList<FacilityFeature> facilityFeatures) {
         this.id = id;
         this.name = name;
         this.adress = adress;
@@ -57,19 +61,18 @@ public class Hotel {
         this.star = star;
         this.high_season_strt_date = high_season_strt_date;
         this.high_season_fnsh_date = high_season_fnsh_date;
-        this.hotel_open=hotel_open;
-        this.hotel_close=hotel_close;
-        this.facilityFeatures=facilityFeatures;
-        this.hostelTypes=hostelTypes;
+        this.hotel_open = hotel_open;
+        this.hotel_close = hotel_close;
+        this.facilityFeatures = facilityFeatures;
+        this.hostelTypes = hostelTypes;
     }
-
-
 
 
     public Hotel() {
 
     }
 
+    //Hotel için getter ve setter
     public int getId() {
         return id;
     }
@@ -115,15 +118,16 @@ public class Hotel {
     }
 
     public void setStar(String star) {
-        this.star= Star.valueOf(star);
+        this.star = Star.valueOf(star);
 
     }
+
     public LocalDate getHigh_season_strt_date() {
-        return  high_season_strt_date;
+        return high_season_strt_date;
     }
 
-    public void setHigh_season_strt_date(LocalDate high_season_strt_date)  {
-        this.high_season_strt_date= high_season_strt_date;
+    public void setHigh_season_strt_date(LocalDate high_season_strt_date) {
+        this.high_season_strt_date = high_season_strt_date;
     }
 
     public LocalDate getHigh_season_fnsh_date() {
@@ -134,11 +138,11 @@ public class Hotel {
         this.high_season_fnsh_date = high_season_fnsh_date;
     }
 
-    public ArrayList<HostelType>    getHostelType() {
+    public ArrayList<HostelType> getHostelType() {
         return hostelTypes;
     }
 
-    public  ArrayList< FacilityFeature > getFacilityFeature() {
+    public ArrayList<FacilityFeature> getFacilityFeature() {
         return facilityFeatures;
     }
 
@@ -147,18 +151,19 @@ public class Hotel {
         this.star = star;
     }
 
-    public void setHostelTypes(ArrayList<HostelType >  hostelTypes) {
+    public void setHostelTypes(ArrayList<HostelType> hostelTypes) {
         this.hostelTypes = hostelTypes;
     }
 
-    public void setFacilityFeatures(ArrayList< FacilityFeature >facilityFeatures) {
+    public void setFacilityFeatures(ArrayList<FacilityFeature> facilityFeatures) {
         this.facilityFeatures = facilityFeatures;
     }
 
 
-    public void addHostelType(HostelType type){
+    public void addHostelType(HostelType type) {
         this.hostelTypes.add(type);
     }
+
     public void addFacilityFeature(FacilityFeature feature) {
         this.facilityFeatures.add(feature);
     }
